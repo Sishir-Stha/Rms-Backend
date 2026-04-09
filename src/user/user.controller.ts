@@ -46,11 +46,19 @@ export const updateUsers = async ( req : Request, res : Response)=>{
 export const deleteUsers = async ( req : Request , res : Response) =>{
     const{user_id} = req.body;
     try{
+        const check = await userService.getUserById(user_id);
+        if(!check){
+            return errorResponse(HttpStatus.NOT_FOUND)(res,'User Not Found')({});
+        }
         const result = await userService.deleteUser(user_id);
+         if(!result || result.length === 0){
+          return errorResponse(HttpStatus.BAD_REQUEST)(res,'Deleting user failed')
+        }
+          return successResponse(HttpStatus.OK)(res,'User deleted successfully')({result})
 
     }catch(error){
-          return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res,'Server Error')({});
-    }
+          return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res,'Server Error'+ error)({});
+    }   
 }
 
 

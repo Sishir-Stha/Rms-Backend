@@ -45,6 +45,15 @@ export const getUserByEmail = async(email : string ) => {
     return result.rows[0];
 }
 
+
+export const getUserById = async(user_id : string ) => {
+    const query = "select * from users where user_id = $1 ";
+    const values = [user_id];
+    const result = await pool.query(query,values);
+    return result.rows[0];
+}
+
+
 export const getAllUsers = async() =>{
     const query = "select u.user_id,u.user_name ,u.email , json_build_object('department_id', d.department_id  ,'department_name', d.department_name )as department ,u.status ,u.join_date ,u.created_at   from users u inner join departments d  on u.department_id  = d.department_id ;"
     const result = await pool.query(query);
@@ -52,13 +61,11 @@ export const getAllUsers = async() =>{
 }
 
 export const deleteUser = async(user_id : number) => {
-    const query = "delete from users where user_id = $1 Returning *;"
+    const query = "update users  set status = 'Delete' where user_id = $1 Returning *;"
     const values = [user_id]
     const result = await pool.query(query,values);
-     if(result.rowCount === 0 ){
-        return false;
-    } 
-    return true;
+  
+    return result.rows[0];
 }
 
 

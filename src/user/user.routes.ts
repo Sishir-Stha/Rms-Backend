@@ -7,4 +7,4 @@ export const userRouter = Router();
 userRouter.get("/",user.getAllUsers);
 userRouter.post("/",userValidator.InsertUserValidator,user.insertUser);
 //userRouter.put("/",)
-//userRouter.delete("/",)
+userRouter.delete("/",user.deleteUsers);
