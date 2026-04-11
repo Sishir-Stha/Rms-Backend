@@ -1,3 +1,7 @@
 ## Activity Log :
  
 ** commit 1 04-09 : made the delete endpoint with new constraint on the database with delete status **
+
+** commit 2 04-11 : completed the user one delete update now to the repairs         
+                    finished the schema & type all the groudwork              
+                  : made the function in db and called it to the service now to the controller **

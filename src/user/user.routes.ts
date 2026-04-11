@@ -6,5 +6,5 @@ export const userRouter = Router();
 
 userRouter.get("/",user.getAllUsers);
 userRouter.post("/",userValidator.InsertUserValidator,user.insertUser);
-//userRouter.put("/",)
+userRouter.put("/",userValidator.UpdateUserValidator,user.updateUsers);
 userRouter.delete("/",user.deleteUsers);

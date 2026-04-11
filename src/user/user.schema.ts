@@ -9,3 +9,12 @@ export const insertUserSchema = joi.object({
     join_date : joi.date().required()
 })
 
+export const updateUserSchema = joi.object({
+    user_id : joi.number().required(),
+    user_name : joi.string().required(), 
+    email : joi.string().required().email(), 
+    department_id : joi.number().required(), 
+    status : joi.string().required(), 
+  
+})
+
