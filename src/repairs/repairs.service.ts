@@ -7,5 +7,6 @@ export const getRepairs = async (
         const values=[status,device_name]
         const result = await pool.query(query,values)
         return result.rows;
-
 }
+
+
