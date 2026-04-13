@@ -28,12 +28,12 @@ export const insertUser = async(req : Request, res : Response)=>{
 
 export const updateUsers = async ( req : Request, res : Response)=>{
     try{
-        const {user_name, email,department_id,status} = req.body;
+        const {user_id,user_name, email,department_id,status} = req.body;
         const user = await userService.getUserByEmail(email);
         if(!user){
             return errorResponse(HttpStatus.NOT_FOUND)(res,'User Not Found')({});
         }
-        const updated = await userService.updateUserById(user.user_id,user_name,department_id,status,email);
+        const updated = await userService.updateUserById(user_id,user_name,department_id,status,email);
         if(!updated || updated.length === 0){
           return errorResponse(HttpStatus.BAD_REQUEST)(res,'User updating failed')
         }
@@ -60,7 +60,6 @@ export const deleteUsers = async ( req : Request , res : Response) =>{
           return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res,'Server Error'+ error)({});
     }   
 }
-
 
 export const getAllUsers = async (req : Request,res: Response) => {
     try{
