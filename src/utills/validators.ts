@@ -1,12 +1,12 @@
 import { Schema } from "joi";
 
-export const validate = <T>(data : T , schema : Schema) => {
+export const validate = <T>(data: T, schema: Schema) => {
 
-    const { value , error } = schema.validate(data);
-    if(error){
+    const { value, error } = schema.validate(data);
+    if (error) {
         console.log("validation error");
         return Promise.reject(error);
-    }else {
+    } else {
         return Promise.resolve(value);
     }
 }
