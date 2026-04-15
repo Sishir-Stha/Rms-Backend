@@ -9,4 +9,13 @@ export const getRepairs = async (
         return result.rows;
 }
 
+export const getRepairsById = async ( repair_id : number ) => {
+    const query = `SELECT * from repairs where repair_id = $1;`
+    const values = [repair_id]
+    const result = await pool.query(query,values)
+    return result.rows[0];
+}
 
+export const updateRepairsById = async ( repair_id : number ) =>{
+    const query = ``
+}
