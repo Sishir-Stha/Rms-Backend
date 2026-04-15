@@ -11,7 +11,11 @@ export interface reports{
     expected_completion : Date;
     resolved_date : Date;
     cost : number;
+
 }
 
 export type TfilterReports = Omit<reports,'repair_id'|'category_id'|'serial_no'|'issue'|
                                   'notes'|'vendor_id'|'priority'|'expected_completion'|'resolved_date'|'cost'>
+
+export type TupdateKanbanColumn = Omit<reports,'repair_id'|'category_id'|'serial_no'|'issue'|
+                                  'notes'|'vendor_id'|'priority'|'expected_completion'|'resolved_date'|'cost'> &{kanban_column : string}
