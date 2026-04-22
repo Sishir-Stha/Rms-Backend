@@ -1,0 +1,833 @@
+{
+  "info": {
+    "_postman_id": "8b8073b7-7851-4f31-a4f1-cce6c8f85a0e",
+    "name": "Rms Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for the RMS backend endpoints currently implemented in the project."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth Module",
+      "item": [
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@mail.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login endpoint."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users Module",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Fetch all users."
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_name\": \"Sishir\",\n  \"email\": \"sishir@mail.com\",\n  \"password\": \"secret123\",\n  \"department_id\": 2,\n  \"status\": \"Active\",\n  \"join_date\": \"2026-04-22\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Create a user."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 7,\n  \"user_name\": \"Sishir Updated\",\n  \"email\": \"sishir@mail.com\",\n  \"department_id\": 2,\n  \"status\": \"Inactive\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Update a user."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 7\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "description": "Soft delete a user."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vendors Module",
+      "item": [
+        {
+          "name": "Get Vendors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vendors?vendor_name=ABC&specialization=Laptop Repair",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors"
+              ],
+              "query": [
+                {
+                  "key": "vendor_name",
+                  "value": "ABC"
+                },
+                {
+                  "key": "specialization",
+                  "value": "Laptop Repair"
+                }
+              ]
+            },
+            "description": "Get vendors with optional filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor_name\": \"ABC Suppliers\",\n  \"contact\": \"John Doe\",\n  \"phone\": \"9812345678\",\n  \"specialization\": \"Laptop Repair\",\n  \"rating\": 4.5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/vendors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors"
+              ]
+            },
+            "description": "Create a vendor."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vendor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor_name\": \"ABC Suppliers Pvt Ltd\",\n  \"contact\": \"John Doe\",\n  \"phone\": \"9800000000\",\n  \"specialization\": \"Laptop Repair\",\n  \"rating\": 4.8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/vendors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "1"
+              ]
+            },
+            "description": "Update a vendor by vendor_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vendor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "1"
+              ]
+            },
+            "description": "Delete a vendor by vendor_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Repairs Module",
+      "item": [
+        {
+          "name": "Get Repairs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repairs?status=Open&device_name=HP",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Open"
+                },
+                {
+                  "key": "device_name",
+                  "value": "HP"
+                }
+              ]
+            },
+            "description": "Get repairs with optional filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Repair By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repairs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "1"
+              ]
+            },
+            "description": "Get a repair by repair_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Repair",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_name\": \"HP EliteBook\",\n  \"category_id\": 1,\n  \"serial_no\": \"SN-1001\",\n  \"department_id\": 2,\n  \"issue\": \"Screen flickering\",\n  \"notes\": \"Urgent\",\n  \"reported_by\": 1,\n  \"vendor_id\": 1,\n  \"priority\": \"High\",\n  \"expected_completion\": \"2026-04-30\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs"
+              ]
+            },
+            "description": "Create a repair."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Repair",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_name\": \"HP EliteBook\",\n  \"category_id\": 1,\n  \"serial_no\": \"SN-1001\",\n  \"department_id\": 2,\n  \"issue\": \"Screen replaced\",\n  \"notes\": \"Resolved\",\n  \"status\": \"Resolved\",\n  \"reported_by\": 1,\n  \"reported_date\": \"2026-04-20\",\n  \"vendor_id\": 1,\n  \"priority\": \"High\",\n  \"expected_completion\": \"2026-04-30\",\n  \"resolved_date\": \"2026-04-22\",\n  \"cost\": 4500\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "1"
+              ]
+            },
+            "description": "Update a repair by repair_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Move Repair Kanban Column",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kanban_column\": \"Resolved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs/1/move",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "1",
+                "move"
+              ]
+            },
+            "description": "Move repair kanban column."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Repair",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repairs/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "1"
+              ]
+            },
+            "description": "Delete a repair by repair_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Device Requests Module",
+      "item": [
+        {
+          "name": "Get Device Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-requests?approval_status=Pending&device_type=Laptop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests"
+              ],
+              "query": [
+                {
+                  "key": "approval_status",
+                  "value": "Pending"
+                },
+                {
+                  "key": "device_type",
+                  "value": "Laptop"
+                }
+              ]
+            },
+            "description": "Get device requests with optional filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device Request By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "1"
+              ]
+            },
+            "description": "Get a device request by request_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Device Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requested_by\": 1,\n  \"department_id\": 2,\n  \"device_type\": \"Laptop\",\n  \"brand\": \"Dell\",\n  \"reason\": \"New onboarding\",\n  \"quantity\": 2,\n  \"priority\": \"High\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests"
+              ]
+            },
+            "description": "Create a device request."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Device Request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requested_by\": 1,\n  \"department_id\": 2,\n  \"device_type\": \"Laptop\",\n  \"brand\": \"Dell\",\n  \"reason\": \"Replacement\",\n  \"quantity\": 1,\n  \"priority\": \"Medium\",\n  \"request_date\": \"2026-04-20\",\n  \"approval_status\": \"Pending\",\n  \"approved_by\": 2,\n  \"approval_date\": \"2026-04-22\",\n  \"kanban_column\": \"Pending\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "1"
+              ]
+            },
+            "description": "Update a device request by request_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Move Device Request Kanban Column",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kanban_column\": \"Approved\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/1/move",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "1",
+                "move"
+              ]
+            },
+            "description": "Move device request kanban column."
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Device Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approval_status\": \"Approved\",\n  \"approved_by\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/1/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "1",
+                "approve"
+              ]
+            },
+            "description": "Approve or reject a device request."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Device Request",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "1"
+              ]
+            },
+            "description": "Delete a device request by request_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Departments Module",
+      "item": [
+        {
+          "name": "Get Departments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments?department_name=IT&department_code=IT",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments"
+              ],
+              "query": [
+                {
+                  "key": "department_name",
+                  "value": "IT"
+                },
+                {
+                  "key": "department_code",
+                  "value": "IT"
+                }
+              ]
+            },
+            "description": "Get departments with optional filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_name\": \"IT\",\n  \"department_code\": \"IT\",\n  \"head_count\": 15\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments"
+              ]
+            },
+            "description": "Create a department."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_name\": \"IT Support\",\n  \"department_code\": \"ITS\",\n  \"head_count\": 18\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "2"
+              ]
+            },
+            "description": "Update a department by department_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "2"
+              ]
+            },
+            "description": "Delete a department by department_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Device Categories Module",
+      "item": [
+        {
+          "name": "Get Device Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-categories?category_name=Laptop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories"
+              ],
+              "query": [
+                {
+                  "key": "category_name",
+                  "value": "Laptop"
+                }
+              ]
+            },
+            "description": "Get device categories with optional filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Device Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"Laptop\",\n  \"description\": \"Laptop devices\",\n  \"device_count\": 25\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories"
+              ]
+            },
+            "description": "Create a device category."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Device Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"Laptop\",\n  \"description\": \"Updated description\",\n  \"device_count\": 30\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-categories/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories",
+                "1"
+              ]
+            },
+            "description": "Update a device category by category_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Device Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-categories/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories",
+                "1"
+              ]
+            },
+            "description": "Delete a device category by category_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard Module",
+      "item": [
+        {
+          "name": "Get Dashboard Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/metrics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "metrics"
+              ]
+            },
+            "description": "Get dashboard metrics."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

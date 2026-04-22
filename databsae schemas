@@ -1,0 +1,203 @@
+-- public.departments definition
+
+-- Drop table
+
+-- DROP TABLE public.departments;
+
+CREATE TABLE public.departments (
+	department_id serial4 NOT NULL,
+	department_name varchar(100) NOT NULL,
+	department_code varchar(10) NOT NULL,
+	head_count int4 DEFAULT 0 NULL,
+	CONSTRAINT departments_department_code_key UNIQUE (department_code),
+	CONSTRAINT departments_department_name_key UNIQUE (department_name),
+	CONSTRAINT departments_pkey PRIMARY KEY (department_id)
+);
+
+
+-- public.device_categories definition
+
+-- Drop table
+
+-- DROP TABLE public.device_categories;
+
+CREATE TABLE public.device_categories (
+	category_id serial4 NOT NULL,
+	category_name varchar(100) NOT NULL,
+	description text NULL,
+	device_count int4 DEFAULT 0 NULL,
+	CONSTRAINT device_categories_category_name_key UNIQUE (category_name),
+	CONSTRAINT device_categories_pkey PRIMARY KEY (category_id)
+);
+
+
+-- public.vendors definition
+
+-- Drop table
+
+-- DROP TABLE public.vendors;
+
+CREATE TABLE public.vendors (
+	vendor_id serial4 NOT NULL,
+	vendor_name varchar(150) NOT NULL,
+	contact varchar(150) NULL,
+	phone varchar(30) NULL,
+	specialization varchar(200) NULL,
+	rating numeric(3, 1) DEFAULT 0 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT vendors_pkey PRIMARY KEY (vendor_id),
+	CONSTRAINT vendors_rating_check CHECK (((rating >= (0)::numeric) AND (rating <= (5)::numeric))),
+	CONSTRAINT vendors_vendor_name_key UNIQUE (vendor_name)
+);
+
+
+-- public.users definition
+
+-- Drop table
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users (
+	user_id serial4 NOT NULL,
+	user_name varchar(100) NOT NULL,
+	email varchar(150) NOT NULL,
+	"password" text NOT NULL,
+	department_id int4 NULL,
+	status varchar(20) DEFAULT 'Active'::character varying NULL,
+	join_date date NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT users_email_key UNIQUE (email),
+	CONSTRAINT users_pkey PRIMARY KEY (user_id),
+	CONSTRAINT users_status_check CHECK (((status)::text = ANY (ARRAY[('Active'::character varying)::text, ('Delete'::character varying)::text, ('Inactive'::character varying)::text]))),
+	CONSTRAINT users_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(department_id)
+);
+
+
+-- public.device_requests definition
+
+-- Drop table
+
+-- DROP TABLE public.device_requests;
+
+CREATE TABLE public.device_requests (
+	request_id serial4 NOT NULL,
+	requested_by int4 NULL,
+	department_id int4 NULL,
+	device_type varchar(100) NULL,
+	brand varchar(150) NULL,
+	reason text NULL,
+	quantity int4 DEFAULT 1 NULL,
+	priority varchar(20) NULL,
+	request_date date DEFAULT CURRENT_DATE NULL,
+	approval_status varchar(20) NULL,
+	approved_by int4 NULL,
+	approval_date date NULL,
+	kanban_column varchar(20) NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT device_requests_pkey PRIMARY KEY (request_id),
+	CONSTRAINT dr_kanban_check CHECK (((kanban_column)::text = ANY ((ARRAY['Requested'::character varying, 'Pending'::character varying, 'Approved'::character varying, 'Rejected'::character varying])::text[]))),
+	CONSTRAINT dr_priority_check CHECK (((priority)::text = ANY (ARRAY[('Low'::character varying)::text, ('Medium'::character varying)::text, ('High'::character varying)::text, ('Critical'::character varying)::text]))),
+	CONSTRAINT dr_status_check CHECK (((approval_status)::text = ANY ((ARRAY['Requested'::character varying, 'Pending'::character varying, 'Approved'::character varying, 'Rejected'::character varying])::text[]))),
+	CONSTRAINT device_requests_approved_by_fkey FOREIGN KEY (approved_by) REFERENCES public.users(user_id),
+	CONSTRAINT device_requests_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(department_id),
+	CONSTRAINT device_requests_requested_by_fkey FOREIGN KEY (requested_by) REFERENCES public.users(user_id)
+);
+
+-- Table Triggers
+
+create trigger trg_device_request_sync before
+update
+    on
+    public.device_requests for each row execute function sync_device_request_kanban_status();
+
+
+-- public.repairs definition
+
+-- Drop table
+
+-- DROP TABLE public.repairs;
+
+CREATE TABLE public.repairs (
+	repair_id serial4 NOT NULL,
+	device_name varchar(200) NULL,
+	category_id int4 NULL,
+	serial_no varchar(100) NULL,
+	department_id int4 NULL,
+	issue text NULL,
+	notes text NULL,
+	reported_by int4 NULL,
+	reported_date date DEFAULT CURRENT_DATE NULL,
+	vendor_id int4 NULL,
+	status varchar(30) NULL,
+	priority varchar(20) NULL,
+	expected_completion date NULL,
+	resolved_date date NULL,
+	costs numeric(10, 2) DEFAULT 0 NULL,
+	kanban_column varchar(30) NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT repairs_kanban_check CHECK (((kanban_column)::text = ANY ((ARRAY['Backlog'::character varying, 'InProgress'::character varying, 'Under Review'::character varying, 'Completed'::character varying])::text[]))),
+	CONSTRAINT repairs_pkey PRIMARY KEY (repair_id),
+	CONSTRAINT repairs_priority_check CHECK (((priority)::text = ANY (ARRAY[('Low'::character varying)::text, ('Medium'::character varying)::text, ('High'::character varying)::text, ('Critical'::character varying)::text]))),
+	CONSTRAINT repairs_status_check CHECK (((status)::text = ANY (ARRAY[('Open'::character varying)::text, ('Pending'::character varying)::text, ('Awaiting Parts'::character varying)::text, ('Resolved'::character varying)::text, ('Closed'::character varying)::text]))),
+	CONSTRAINT repairs_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.device_categories(category_id),
+	CONSTRAINT repairs_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(department_id),
+	CONSTRAINT repairs_reported_by_fkey FOREIGN KEY (reported_by) REFERENCES public.users(user_id),
+	CONSTRAINT repairs_vendor_id_fkey FOREIGN KEY (vendor_id) REFERENCES public.vendors(vendor_id)
+);
+
+-- Table Triggers
+
+create trigger trg_sync_repair_both before
+update
+    on
+    public.repairs for each row execute function sync_repair_both_ways();
+
+
+
+
+	///// update fucntion reference  /////
+
+	CREATE OR REPLACE FUNCTION public.update_device_request(
+    p_request_id      integer,
+    p_requested_by    integer  DEFAULT NULL,
+    p_department_id   integer  DEFAULT NULL,
+    p_device_type     varchar  DEFAULT NULL,
+    p_brand           varchar  DEFAULT NULL,
+    p_reason          text     DEFAULT NULL,
+    p_quantity        integer  DEFAULT NULL,
+    p_priority        varchar  DEFAULT NULL,
+    p_request_date    date     DEFAULT NULL,
+    p_approval_status varchar  DEFAULT NULL,
+    p_approved_by     integer  DEFAULT NULL,
+    p_approval_date   date     DEFAULT NULL,
+    p_kanban_column   varchar  DEFAULT NULL
+)
+RETURNS boolean
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_updated_rows INT;
+BEGIN
+    UPDATE public.device_requests
+    SET
+        requested_by    = COALESCE(p_requested_by,                      requested_by),
+        department_id   = COALESCE(p_department_id,                     department_id),
+        device_type     = COALESCE(NULLIF(p_device_type,   ''),         device_type),
+        brand           = COALESCE(NULLIF(p_brand,         ''),         brand),
+        reason          = COALESCE(NULLIF(p_reason,        ''),         reason),
+        quantity        = COALESCE(p_quantity,                          quantity),
+        priority        = COALESCE(NULLIF(p_priority,      ''),         priority),
+        request_date    = COALESCE(p_request_date,                      request_date),
+        approval_status = COALESCE(NULLIF(p_approval_status, ''),       approval_status),
+        approved_by     = COALESCE(p_approved_by,                       approved_by),
+        approval_date   = COALESCE(p_approval_date,                     approval_date),
+        kanban_column   = COALESCE(NULLIF(p_kanban_column, ''),         kanban_column),
+        updated_at      = CURRENT_TIMESTAMP
+    WHERE request_id = p_request_id;
+
+    GET DIAGNOSTICS v_updated_rows = ROW_COUNT;
+    RETURN v_updated_rows > 0;
+END;
+$$;
