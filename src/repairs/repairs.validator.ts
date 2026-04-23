@@ -11,12 +11,8 @@ export const createRepairValidator = (req: Request, _res: Response, next: NextFu
 
 // ── GET /repairs  (merge query-string so ?status= and body both work) ──────────
 export const repairsFilterValidator = (req: Request, _res: Response, next: NextFunction) => {
-    const payload = { ...req.query, ...req.body };
-    return validate<TfilterReports>(payload, schemas.repairsFilterSchema)
-        .then((validated) => {
-            req.body = validated;   // normalise: controller always reads req.body
-            next();
-        })
+    return validate<TfilterReports>(req.body, schemas.repairsFilterSchema)
+       .then(() => next())
         .catch(next);
 };
 

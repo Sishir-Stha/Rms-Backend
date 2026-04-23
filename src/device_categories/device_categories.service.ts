@@ -25,63 +25,6 @@ const deleteDeviceCategoryQuery = `
     DELETE FROM public.device_categories WHERE category_id = $1;
 `;
 
-export const deviceCategorySql = {
-    createDeviceCategoryQuery,
-    getDeviceCategoriesFunctionQuery: `
-        CREATE OR REPLACE FUNCTION public.get_device_categories(
-            p_category_name varchar DEFAULT ''
-        )
-        RETURNS TABLE (
-            category_id integer,
-            category_name varchar,
-            description text,
-            device_count integer
-        )
-        LANGUAGE plpgsql
-        AS $$
-        BEGIN
-            RETURN QUERY
-            SELECT
-                dc.category_id,
-                dc.category_name,
-                dc.description,
-                dc.device_count
-            FROM public.device_categories dc
-            WHERE
-                (COALESCE(p_category_name, '') = '' OR dc.category_name ILIKE '%' || p_category_name || '%')
-            ORDER BY dc.category_id DESC;
-        END;
-        $$;
-    `,
-    getDeviceCategoriesQuery,
-    updateDeviceCategoryFunctionQuery: `
-        CREATE OR REPLACE FUNCTION public.update_device_category(
-            p_category_id integer,
-            p_category_name varchar DEFAULT NULL,
-            p_description text DEFAULT NULL,
-            p_device_count integer DEFAULT NULL
-        )
-        RETURNS boolean
-        LANGUAGE plpgsql
-        AS $$
-        DECLARE
-            v_updated_rows INT;
-        BEGIN
-            UPDATE public.device_categories
-            SET
-                category_name = COALESCE(NULLIF(p_category_name, ''), category_name),
-                description   = COALESCE(NULLIF(p_description, ''), description),
-                device_count  = COALESCE(p_device_count, device_count)
-            WHERE category_id = p_category_id;
-
-            GET DIAGNOSTICS v_updated_rows = ROW_COUNT;
-            RETURN v_updated_rows > 0;
-        END;
-        $$;
-    `,
-    updateDeviceCategoryQuery,
-    deleteDeviceCategoryQuery,
-};
 
 export const createDeviceCategory = async (
     category_name : string,

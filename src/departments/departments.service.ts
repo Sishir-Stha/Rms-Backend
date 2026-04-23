@@ -25,67 +25,6 @@ const deleteDepartmentQuery = `
     DELETE FROM public.departments WHERE department_id = $1;
 `;
 
-export const departmentSql = {
-    createDepartmentQuery,
-    getDepartmentsFunctionQuery: `
-        CREATE OR REPLACE FUNCTION public.get_departments(
-            p_department_name varchar DEFAULT '',
-            p_department_code varchar DEFAULT ''
-        )
-        RETURNS TABLE (
-            department_id integer,
-            department_name varchar,
-            department_code varchar,
-            head_count integer
-        )
-        LANGUAGE plpgsql
-        AS $$
-        BEGIN
-            RETURN QUERY
-            SELECT
-                d.department_id,
-                d.department_name,
-                d.department_code,
-                d.head_count
-            FROM public.departments d
-            WHERE
-                (COALESCE(p_department_name, '') = '' OR d.department_name ILIKE '%' || p_department_name || '%')
-                AND
-                (COALESCE(p_department_code, '') = '' OR d.department_code ILIKE '%' || p_department_code || '%')
-            ORDER BY d.department_id DESC;
-        END;
-        $$;
-    `,
-    getDepartmentsQuery,
-    updateDepartmentFunctionQuery: `
-        CREATE OR REPLACE FUNCTION public.update_department(
-            p_department_id integer,
-            p_department_name varchar DEFAULT NULL,
-            p_department_code varchar DEFAULT NULL,
-            p_head_count integer DEFAULT NULL
-        )
-        RETURNS boolean
-        LANGUAGE plpgsql
-        AS $$
-        DECLARE
-            v_updated_rows INT;
-        BEGIN
-            UPDATE public.departments
-            SET
-                department_name = COALESCE(NULLIF(p_department_name, ''), department_name),
-                department_code = COALESCE(NULLIF(p_department_code, ''), department_code),
-                head_count      = COALESCE(p_head_count, head_count)
-            WHERE department_id = p_department_id;
-
-            GET DIAGNOSTICS v_updated_rows = ROW_COUNT;
-            RETURN v_updated_rows > 0;
-        END;
-        $$;
-    `,
-    updateDepartmentQuery,
-    deleteDepartmentQuery,
-};
-
 export const createDepartment = async (
     department_name : string,
     department_code : string,

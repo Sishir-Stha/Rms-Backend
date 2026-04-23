@@ -13,12 +13,8 @@ export const createDeviceCategoryValidator = (req: Request, _res: Response, next
         .catch(next);
 
 export const deviceCategoriesFilterValidator = (req: Request, _res: Response, next: NextFunction) => {
-    const payload = { ...req.query, ...req.body };
-    return validate<TfilterDeviceCategories>(payload, schemas.deviceCategoriesFilterSchema)
-        .then((validated) => {
-            req.body = validated;
-            next();
-        })
+    return validate<TfilterDeviceCategories>(req.body, schemas.deviceCategoriesFilterSchema)
+        .then(() => next())
         .catch(next);
 };
 

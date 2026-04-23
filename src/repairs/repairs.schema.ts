@@ -5,7 +5,7 @@ const VALID_STATUSES    = ['Open', 'In Progress', 'Resolved', 'Closed'] as const
 const VALID_KANBAN_COLS = ['Backlog', 'In Progress', 'Resolved', 'Closed'] as const;
 
 // Shared options: strip unknown keys and surface all errors at once
-const JOI_OPTS = { abortEarly: false, stripUnknown: true };
+
 
 // ── POST /repairs ─────────────────────────────────────────────────────────────
 export const createRepairSchema = joi.object({
@@ -19,18 +19,18 @@ export const createRepairSchema = joi.object({
     vendor_id           : joi.number().integer().allow(null).default(null),
     priority            : joi.string().valid(...VALID_PRIORITIES).default('Medium'),
     expected_completion : joi.date().allow(null, '').default(null),
-}).options(JOI_OPTS);
+});
 
 // ── GET /repairs ──────────────────────────────────────────────────────────────
 export const repairsFilterSchema = joi.object({
     status      : joi.string().valid(...VALID_STATUSES).allow(null, '').default(''),
     device_name : joi.string().allow(null, '').default(''),
-}).options(JOI_OPTS);
+});
 
 // ── GET|DELETE /repairs/:repair_id ────────────────────────────────────────────
 export const repairByIdSchema = joi.object({
     repair_id: joi.number().integer().required(),
-}).options(JOI_OPTS);
+});
 
 // ── PUT /repairs/:repair_id ───────────────────────────────────────────────────
 export const updateRepairsSchema = joi.object({
@@ -48,9 +48,9 @@ export const updateRepairsSchema = joi.object({
     expected_completion : joi.date().allow(null, '').default(null),
     resolved_date       : joi.date().allow(null, '').default(null),
     cost                : joi.number().allow(null).default(null),
-}).options(JOI_OPTS);
+});
 
 // ── PATCH /repairs/:repair_id/move ────────────────────────────────────────────
 export const updateKanbanSchema = joi.object({
     kanban_column: joi.string().valid(...VALID_KANBAN_COLS).required(),
-}).options(JOI_OPTS);
+});

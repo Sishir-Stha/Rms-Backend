@@ -9,12 +9,8 @@ export const createDepartmentValidator = (req: Request, _res: Response, next: Ne
         .catch(next);
 
 export const departmentsFilterValidator = (req: Request, _res: Response, next: NextFunction) => {
-    const payload = { ...req.query, ...req.body };
-    return validate<TfilterDepartments>(payload, schemas.departmentsFilterSchema)
-        .then((validated) => {
-            req.body = validated;
-            next();
-        })
+    return validate<TfilterDepartments>(req.body, schemas.departmentsFilterSchema)
+        .then(() => next())
         .catch(next);
 };
 
