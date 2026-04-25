@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as dashboardService from './dashboard.service';
-import { errorResponse } from '../utills/responseFormat';
+import { errorResponse, successResponse } from '../utills/responseFormat';
 import HttpStatus from 'http-status-codes';
 
 export const getDashboardMetrics = async (_req: Request, res: Response) => {
@@ -11,7 +11,7 @@ export const getDashboardMetrics = async (_req: Request, res: Response) => {
             return errorResponse(HttpStatus.NOT_FOUND)(res, 'Dashboard metrics not found')({});
         }
 
-        return res.status(HttpStatus.OK).json(result);
+        return successResponse(HttpStatus.OK)(res, 'Dashboard metrics retrieved successfully')(result);
     } catch (error) {
         return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res, 'Server Error')({ error });
     }
