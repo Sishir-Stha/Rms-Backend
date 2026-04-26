@@ -19,7 +19,7 @@ export const createRepair = async (
             issue, notes, reported_by, vendor_id, priority,
             expected_completion, status, kanban_column, costs
         )
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'Open','Backlog',0)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'Open','Open',0)
         RETURNING repair_id;
     `;
     const result = await pool.query(query, [

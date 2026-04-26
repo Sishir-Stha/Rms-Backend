@@ -18,3 +18,8 @@ export const updateUserSchema = joi.object({
   
 })
 
+export const userByIdSchema = joi.object({
+    user_id: joi.number().integer().required(),
+});
+
+

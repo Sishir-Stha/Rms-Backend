@@ -2,7 +2,7 @@ import joi from 'joi';
 
 const VALID_PRIORITIES  = ['Low', 'Medium', 'High', 'Critical'] as const;
 const VALID_STATUSES    = ['Open', 'In Progress', 'Resolved', 'Closed'] as const;
-const VALID_KANBAN_COLS = ['Backlog', 'In Progress', 'Resolved', 'Closed'] as const;
+const VALID_KANBAN_COLS =  ['Open', 'In Progress', 'Resolved', 'Closed'] as const;
 
 // Shared options: strip unknown keys and surface all errors at once
 
