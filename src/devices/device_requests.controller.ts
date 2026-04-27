@@ -69,7 +69,6 @@ export const updateDeviceRequestById = async (req: Request, res: Response) => {
             req.body.approval_status ?? null,
             req.body.approved_by     ?? null,
             req.body.approval_date   ?? null,
-            req.body.kanban_column   ?? null,
         );
         return successResponse(HttpStatus.OK)(res, 'Device request updated successfully')({ result: updateResult });
     } catch (error) {
@@ -85,7 +84,7 @@ export const moveKanbanColumn = async (req: Request, res: Response) => {
         if (!existing) {
             return errorResponse(HttpStatus.NOT_FOUND)(res, 'Device request not found')({});
         }
-        const result = await deviceRequestService.moveKanbanColumn(request_id, req.body.kanban_column);
+        const result = await deviceRequestService.moveKanbanColumn(request_id, req.body.approval_status);
         return successResponse(HttpStatus.OK)(res, 'Kanban column updated successfully')({ result });
     } catch (error) {
         return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res, 'Server Error')({ error });

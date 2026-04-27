@@ -12,8 +12,8 @@ export const createDeviceRequest = async (
     const result = await pool.query(
         `INSERT INTO public.device_requests
             (requested_by, department_id, device_type, brand, reason,
-             quantity, priority, approval_status, kanban_column)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,'Requested','Requested')
+             quantity, priority, approval_status)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,'Requested')
          RETURNING request_id;`,
         [requested_by, department_id, device_type, brand, reason, quantity, priority]
     );
@@ -51,7 +51,6 @@ export const getDeviceRequestById = async (
             dr.approved_by,
             u_apr.user_name     AS approver_name,
             dr.approval_date,
-            dr.kanban_column,
             dr.created_at,
             dr.updated_at
          FROM   public.device_requests dr
@@ -76,19 +75,18 @@ export const updateDeviceRequestById = async (
     request_date    : Date   | null,
     approval_status : string | null,
     approved_by     : number | null,
-    approval_date   : Date   | null,
-    kanban_column   : string | null
+    approval_date   : Date   | null
 ): Promise<boolean> => {
     const result = await pool.query(
         `SELECT update_device_request(
             $1::int,  $2::int,     $3::int,     $4::varchar,
             $5::varchar, $6::text, $7::int,     $8::varchar,
-            $9::date, $10::varchar, $11::int,   $12::date, $13::varchar
+            $9::date, $10::varchar, $11::int,   $12::date
          ) AS success;`,
         [
             request_id, requested_by, department_id, device_type,
             brand, reason, quantity, priority,
-            request_date, approval_status, approved_by, approval_date, kanban_column,
+            request_date, approval_status, approved_by, approval_date
         ]
     );
     return result.rows[0]?.success ?? false;
@@ -96,14 +94,14 @@ export const updateDeviceRequestById = async (
 
 export const moveKanbanColumn = async (
     request_id   : number,
-    kanban_column: string
+    status: string
 ): Promise<Record<string, unknown> | undefined> => {
     const result = await pool.query(
         `UPDATE public.device_requests
-         SET    kanban_column = $2
+         SET    approval_status = $2
          WHERE  request_id   = $1
          RETURNING *;`,
-        [request_id, kanban_column]
+        [request_id, status]
     );
     return result.rows[0];
 };

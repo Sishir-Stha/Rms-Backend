@@ -73,3 +73,18 @@ export const getAllUsers = async (req : Request,res: Response) => {
     }
 
 }
+
+
+export const getUserById = async (req : Request,res: Response) => {
+    try{
+        const user_id = Number(req.params.user_id);
+        const result = await userService.getUserById(user_id);
+        if(!result){
+            return errorResponse(HttpStatus.NOT_FOUND)(res,"User not found")({});
+        }
+        return successResponse(HttpStatus.OK)(res,"User fetched successfully")({result})
+    }catch(error){
+          return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res,'Server Error')({});
+    }
+
+}

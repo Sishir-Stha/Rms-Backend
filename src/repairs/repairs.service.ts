@@ -17,9 +17,9 @@ export const createRepair = async (
         INSERT INTO public.repairs (
             device_name, category_id, serial_no, department_id,
             issue, notes, reported_by, vendor_id, priority,
-            expected_completion, status, kanban_column, costs
+            expected_completion, status,  costs
         )
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'Open','Backlog',0)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'Open',0)
         RETURNING repair_id;
     `;
     const result = await pool.query(query, [
@@ -88,11 +88,11 @@ export const updateRepairsById = async (
 // ── MOVE KANBAN COLUMN ────────────────────────────────────────────────────────
 export const updateKanbanColumn = async (
     repair_id    : number,
-    kanban_column: string
+    status: string
 ): Promise<Record<string, unknown> | undefined> => {
     const result = await pool.query(
-        `UPDATE repairs SET kanban_column = $2 WHERE repair_id = $1 RETURNING *;`,
-        [repair_id, kanban_column]
+        `UPDATE repairs SET status = $2 WHERE repair_id = $1 RETURNING *;`,
+        [repair_id, status]
     );
     return result.rows[0];
 };

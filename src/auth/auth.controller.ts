@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as authService from "../user/user.service";
 import { errorResponse, successResponse } from "../utills/responseFormat";
 import HttpStatus from 'http-status-codes';
-
+import { getDepartmentById } from "../departments/departments.service";
 
 
 export const loginUser = async(req : Request, res : Response)=>{
@@ -13,11 +13,12 @@ export const loginUser = async(req : Request, res : Response)=>{
             return errorResponse(HttpStatus.NOT_FOUND)(res,'User doesnt exists')({});
         }
         let pass = password;
+        const department = await getDepartmentById(user.department_id);
         const response = {
                user_id : user.user_id,
                username : user.user_name,
                "email": user.email,
-               "department" : user.department_id ,
+               "department" : department?.department_name || 'Error',
                "status" : user.status
         }       
         if(pass === user.password){

@@ -25,6 +25,6 @@ export type TfilterReports = Omit<reports,'repair_id'|'category_id'|'serial_no'|
 
 export type TupdateKanbanColumn = Omit<reports,'repair_id'|'category_id'|'serial_no'|'issue'|'status'|'reported_by'|'reported_date'|
                                   'notes'|'vendor_id'|'priority'|'expected_completion'|'resolved_date'|'cost'|'department_id'|'device_name'> 
-                                  &{kanban_column : string}
+                                  &{approval_status : string}
 
 export type TupdateRepairs = Omit<reports,'repair_id'>

@@ -97,7 +97,7 @@ export const updateKanbanColumn = async (req: Request, res: Response) => {
         if (!existing) {
             return errorResponse(HttpStatus.NOT_FOUND)(res, 'Repair not found')({});
         }
-        const result = await repairService.updateKanbanColumn(repair_id, req.body.kanban_column);
+        const result = await repairService.updateKanbanColumn(repair_id, req.body.status);
         return successResponse(HttpStatus.OK)(res, 'Kanban column updated successfully')({ result });
     } catch (error) {
         return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res, 'Server Error')({ error });
