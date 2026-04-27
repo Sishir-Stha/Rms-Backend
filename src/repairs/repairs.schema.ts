@@ -1,8 +1,7 @@
 import joi from 'joi';
 
 const VALID_PRIORITIES  = ['Low', 'Medium', 'High', 'Critical'] as const;
-const VALID_STATUSES    = ['Open', 'In Progress', 'Resolved', 'Closed'] as const;
-const VALID_KANBAN_COLS =  ['Open', 'In Progress', 'Resolved', 'Closed'] as const;
+const VALID_STATUSES    = ['Open', 'InProgress', 'Resolved', 'Closed'] as const;
 
 // Shared options: strip unknown keys and surface all errors at once
 
@@ -52,5 +51,5 @@ export const updateRepairsSchema = joi.object({
 
 // ── PATCH /repairs/:repair_id/move ────────────────────────────────────────────
 export const updateKanbanSchema = joi.object({
-    kanban_column: joi.string().valid(...VALID_KANBAN_COLS).required(),
+    status: joi.string().valid(...VALID_STATUSES).required(),
 });

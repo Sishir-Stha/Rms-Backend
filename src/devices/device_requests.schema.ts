@@ -1,7 +1,6 @@
 import joi from 'joi';
 
 const VALID_PRIORITIES     = ['Low', 'Medium', 'High', 'Critical'] as const;
-const VALID_KANBAN_COLUMNS = ['Requested', 'Pending', 'Approved', 'Rejected'] as const;
 const VALID_STATUSES       = ['Requested', 'Pending', 'Approved', 'Rejected'] as const;
 
 
@@ -37,11 +36,10 @@ export const updateDeviceRequestSchema = joi.object({
     approval_status : joi.string().valid(...VALID_STATUSES).allow(null, '').default(''),
     approved_by     : joi.number().integer().allow(null).default(null),
     approval_date   : joi.date().allow(null, '').default(null),
-    kanban_column   : joi.string().valid(...VALID_KANBAN_COLUMNS).allow(null, '').default(''),
 });
 
 export const moveKanbanColumnSchema = joi.object({
-    kanban_column: joi.string().valid(...VALID_KANBAN_COLUMNS).required(),
+    approval_status: joi.string().valid(...VALID_STATUSES).required(),
 });
 
 export const approveDeviceRequestSchema = joi.object({
