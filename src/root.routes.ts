@@ -7,6 +7,8 @@ import { vendorsRouter } from './vendors/vendors.routes';
 import { departmentsRouter } from './departments/departments.routes';
 import { deviceCategoriesRouter } from './device_categories/device_categories.routes';
 import { dashboardRouter } from './dashboard/dashboard.routes';
+import { reportsRouter } from "./reports/reports.routes";
+
 
 export const router = Router();
 
@@ -19,3 +21,5 @@ router.use('/vendors', vendorsRouter);
 router.use('/departments', departmentsRouter);
 router.use('/device-categories', deviceCategoriesRouter);
 router.use('/dashboard', dashboardRouter);
+router.use('/reports', reportsRouter);
+

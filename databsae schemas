@@ -92,24 +92,15 @@ CREATE TABLE public.device_requests (
 	approval_status varchar(20) NULL,
 	approved_by int4 NULL,
 	approval_date date NULL,
-	kanban_column varchar(20) NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
 	CONSTRAINT device_requests_pkey PRIMARY KEY (request_id),
-	CONSTRAINT dr_kanban_check CHECK (((kanban_column)::text = ANY ((ARRAY['Requested'::character varying, 'Pending'::character varying, 'Approved'::character varying, 'Rejected'::character varying])::text[]))),
 	CONSTRAINT dr_priority_check CHECK (((priority)::text = ANY (ARRAY[('Low'::character varying)::text, ('Medium'::character varying)::text, ('High'::character varying)::text, ('Critical'::character varying)::text]))),
 	CONSTRAINT dr_status_check CHECK (((approval_status)::text = ANY ((ARRAY['Requested'::character varying, 'Pending'::character varying, 'Approved'::character varying, 'Rejected'::character varying])::text[]))),
 	CONSTRAINT device_requests_approved_by_fkey FOREIGN KEY (approved_by) REFERENCES public.users(user_id),
 	CONSTRAINT device_requests_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(department_id),
 	CONSTRAINT device_requests_requested_by_fkey FOREIGN KEY (requested_by) REFERENCES public.users(user_id)
 );
-
--- Table Triggers
-
-create trigger trg_device_request_sync before
-update
-    on
-    public.device_requests for each row execute function sync_device_request_kanban_status();
 
 
 -- public.repairs definition
@@ -134,70 +125,13 @@ CREATE TABLE public.repairs (
 	expected_completion date NULL,
 	resolved_date date NULL,
 	costs numeric(10, 2) DEFAULT 0 NULL,
-	kanban_column varchar(30) NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
-	CONSTRAINT repairs_kanban_check CHECK (((kanban_column)::text = ANY ((ARRAY['Backlog'::character varying, 'InProgress'::character varying, 'Under Review'::character varying, 'Completed'::character varying])::text[]))),
 	CONSTRAINT repairs_pkey PRIMARY KEY (repair_id),
 	CONSTRAINT repairs_priority_check CHECK (((priority)::text = ANY (ARRAY[('Low'::character varying)::text, ('Medium'::character varying)::text, ('High'::character varying)::text, ('Critical'::character varying)::text]))),
-	CONSTRAINT repairs_status_check CHECK (((status)::text = ANY (ARRAY[('Open'::character varying)::text, ('Pending'::character varying)::text, ('Awaiting Parts'::character varying)::text, ('Resolved'::character varying)::text, ('Closed'::character varying)::text]))),
+	CONSTRAINT repairs_status_check CHECK (((status)::text = ANY ((ARRAY['Open'::character varying, 'InProgress'::character varying, 'Resolved'::character varying, 'Closed'::character varying])::text[]))),
 	CONSTRAINT repairs_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.device_categories(category_id),
 	CONSTRAINT repairs_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(department_id),
 	CONSTRAINT repairs_reported_by_fkey FOREIGN KEY (reported_by) REFERENCES public.users(user_id),
 	CONSTRAINT repairs_vendor_id_fkey FOREIGN KEY (vendor_id) REFERENCES public.vendors(vendor_id)
 );
-
--- Table Triggers
-
-create trigger trg_sync_repair_both before
-update
-    on
-    public.repairs for each row execute function sync_repair_both_ways();
-
-
-
-
-	///// update fucntion reference  /////
-
-	CREATE OR REPLACE FUNCTION public.update_device_request(
-    p_request_id      integer,
-    p_requested_by    integer  DEFAULT NULL,
-    p_department_id   integer  DEFAULT NULL,
-    p_device_type     varchar  DEFAULT NULL,
-    p_brand           varchar  DEFAULT NULL,
-    p_reason          text     DEFAULT NULL,
-    p_quantity        integer  DEFAULT NULL,
-    p_priority        varchar  DEFAULT NULL,
-    p_request_date    date     DEFAULT NULL,
-    p_approval_status varchar  DEFAULT NULL,
-    p_approved_by     integer  DEFAULT NULL,
-    p_approval_date   date     DEFAULT NULL,
-    p_kanban_column   varchar  DEFAULT NULL
-)
-RETURNS boolean
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    v_updated_rows INT;
-BEGIN
-    UPDATE public.device_requests
-    SET
-        requested_by    = COALESCE(p_requested_by,                      requested_by),
-        department_id   = COALESCE(p_department_id,                     department_id),
-        device_type     = COALESCE(NULLIF(p_device_type,   ''),         device_type),
-        brand           = COALESCE(NULLIF(p_brand,         ''),         brand),
-        reason          = COALESCE(NULLIF(p_reason,        ''),         reason),
-        quantity        = COALESCE(p_quantity,                          quantity),
-        priority        = COALESCE(NULLIF(p_priority,      ''),         priority),
-        request_date    = COALESCE(p_request_date,                      request_date),
-        approval_status = COALESCE(NULLIF(p_approval_status, ''),       approval_status),
-        approved_by     = COALESCE(p_approved_by,                       approved_by),
-        approval_date   = COALESCE(p_approval_date,                     approval_date),
-        kanban_column   = COALESCE(NULLIF(p_kanban_column, ''),         kanban_column),
-        updated_at      = CURRENT_TIMESTAMP
-    WHERE request_id = p_request_id;
-
-    GET DIAGNOSTICS v_updated_rows = ROW_COUNT;
-    RETURN v_updated_rows > 0;
-END;
-$$;
