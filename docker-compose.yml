@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  backend:
+    build: .
+      #This tells Docker:
+          #Look for a Dockerfile in current folder
+          #Build image from it
+    ports:
+      - "4000:4000"
+      #Your app runs inside container on 4000
+    env_file:
+      - .env
+      #This loads environment variables from .env file into container.
+    environment:
+      - DB_HOST=host.docker.internal
