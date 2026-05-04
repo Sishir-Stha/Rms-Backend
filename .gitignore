@@ -1,0 +1,6 @@
+./nodemodules
+./dist
+./build
+
+.env
+s
