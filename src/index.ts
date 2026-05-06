@@ -25,7 +25,7 @@ app.use(express.json());
 
 app.use('/api/v1', router)
 
-const PORT = parseInt(process.env.PORTV || '4000');
+const PORT = parseInt(process.env.PORT || '4000');
 const HOST = process.env.HOST || '0.0.0.0';
 
 const startServer = async () => {

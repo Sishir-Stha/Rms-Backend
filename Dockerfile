@@ -29,7 +29,7 @@ COPY . .
 EXPOSE 4000
 
 #Run the app
-CMD ["npm","run","dev"]
+CMD ["npm","start"]
 # Why not use RUN npm run dev instead
 # because RUN is used to run commands during the build time of the docker image, 
 # while CMD is used to specify the command that will be executed when a container is started from the image.
