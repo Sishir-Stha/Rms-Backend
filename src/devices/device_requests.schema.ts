@@ -13,6 +13,7 @@ export const createDeviceRequestSchema = joi.object({
     reason        : joi.string().required(),
     quantity      : joi.number().integer().min(1).default(1),
     priority      : joi.string().valid(...VALID_PRIORITIES).default('Medium'),
+    requested_for : joi.string().allow(null, '').default(''),
 });
 
 export const filterDeviceRequestsSchema = joi.object({

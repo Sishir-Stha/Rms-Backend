@@ -7,15 +7,16 @@ export const createDeviceRequest = async (
     brand         : string,
     reason        : string,
     quantity      : number,
-    priority      : string
+    priority      : string,
+    requested_for : string
 ): Promise<number | undefined> => {
     const result = await pool.query(
         `INSERT INTO public.device_requests
             (requested_by, department_id, device_type, brand, reason,
-             quantity, priority, approval_status)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,'Requested')
+             quantity, priority, approval_status,requested_for)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,'Requested',$8)
          RETURNING request_id;`,
-        [requested_by, department_id, device_type, brand, reason, quantity, priority]
+        [requested_by, department_id, device_type, brand, reason, quantity, priority, requested_for]
     );
     return result.rows[0]?.request_id;
 };

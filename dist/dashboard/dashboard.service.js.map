@@ -1,0 +1,1 @@
+{"version":3,"file":"dashboard.service.js","sourceRoot":"","sources":["../../src/dashboard/dashboard.service.ts"],"names":[],"mappings":";;;AAAA,yCAAsC;AAGtC,MAAM,wBAAwB,GAAG;;CAEhC,CAAC;AAEK,MAAM,mBAAmB,GAAG,KAAK,IAA2C,EAAE;IACjF,MAAM,MAAM,GAAG,MAAM,WAAI,CAAC,KAAK,CAAC,wBAAwB,CAAC,CAAC;IAC1D,OAAO,MAAM,CAAC,IAAI,CAAC,CAAC,CAAC,CAAC;AAC1B,CAAC,CAAC;AAHW,QAAA,mBAAmB,uBAG9B"}

@@ -5,10 +5,10 @@ import HttpStatus from 'http-status-codes';
 
 export const createDeviceRequest = async (req: Request, res: Response) => {
     try {
-        const { requested_by, department_id, device_type, brand, reason, quantity, priority } = req.body;
+        const { requested_by, department_id, device_type, brand, reason, quantity, priority, requested_for } = req.body;
 
         const request_id = await deviceRequestService.createDeviceRequest(
-            requested_by, department_id, device_type, brand, reason, quantity, priority
+            requested_by, department_id, device_type, brand, reason, quantity, priority, requested_for
         );
 
         if (!request_id) {
