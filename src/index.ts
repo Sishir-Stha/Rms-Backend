@@ -1,6 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
-import { pool } from "../src/utills/pool"
+import { pool } from "./utills/pool"
 import { router } from "./root.routes"
 import cors from "cors";
 
