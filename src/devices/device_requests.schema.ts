@@ -37,6 +37,7 @@ export const updateDeviceRequestSchema = joi.object({
     approval_status : joi.string().valid(...VALID_STATUSES).allow(null, '').default(''),
     approved_by     : joi.number().integer().allow(null).default(null),
     approval_date   : joi.date().allow(null, '').default(null),
+    requested_for : joi.string().allow(null, '').default(''),
 });
 
 export const moveKanbanColumnSchema = joi.object({

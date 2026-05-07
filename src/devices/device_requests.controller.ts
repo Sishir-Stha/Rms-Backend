@@ -69,6 +69,7 @@ export const updateDeviceRequestById = async (req: Request, res: Response) => {
             req.body.approval_status ?? null,
             req.body.approved_by     ?? null,
             req.body.approval_date   ?? null,
+            req.body.requested_for   ?? null
         );
         return successResponse(HttpStatus.OK)(res, 'Device request updated successfully')({ result: updateResult });
     } catch (error) {

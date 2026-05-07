@@ -53,7 +53,8 @@ export const getDeviceRequestById = async (
             u_apr.user_name     AS approver_name,
             dr.approval_date,
             dr.created_at,
-            dr.updated_at
+            dr.updated_at,
+            dr.requested_for
          FROM   public.device_requests dr
          JOIN   public.users       u_req ON u_req.user_id   = dr.requested_by
          JOIN   public.departments d     ON d.department_id = dr.department_id
@@ -76,18 +77,19 @@ export const updateDeviceRequestById = async (
     request_date    : Date   | null,
     approval_status : string | null,
     approved_by     : number | null,
-    approval_date   : Date   | null
+    approval_date   : Date   | null,
+    requested_for   : string | null
 ): Promise<boolean> => {
     const result = await pool.query(
         `SELECT update_device_request(
             $1::int,  $2::int,     $3::int,     $4::varchar,
             $5::varchar, $6::text, $7::int,     $8::varchar,
-            $9::date, $10::varchar, $11::int,   $12::date
+            $9::date, $10::varchar, $11::int,   $12::date, $13::varchar
          ) AS success;`,
         [
             request_id, requested_by, department_id, device_type,
             brand, reason, quantity, priority,
-            request_date, approval_status, approved_by, approval_date
+            request_date, approval_status, approved_by, approval_date, requested_for
         ]
     );
     return result.rows[0]?.success ?? false;
