@@ -90,7 +90,7 @@ const updateDeviceRequestById = async (req, res) => {
         if (!existing) {
             return (0, responseFormat_1.errorResponse)(http_status_codes_1.default.NOT_FOUND)(res, 'Device request not found')({});
         }
-        const updateResult = await deviceRequestService.updateDeviceRequestById(request_id, req.body.requested_by ?? null, req.body.department_id ?? null, req.body.device_type ?? null, req.body.brand ?? null, req.body.reason ?? null, req.body.quantity ?? null, req.body.priority ?? null, req.body.request_date ?? null, req.body.approval_status ?? null, req.body.approved_by ?? null, req.body.approval_date ?? null);
+        const updateResult = await deviceRequestService.updateDeviceRequestById(request_id, req.body.requested_by ?? null, req.body.department_id ?? null, req.body.device_type ?? null, req.body.brand ?? null, req.body.reason ?? null, req.body.quantity ?? null, req.body.priority ?? null, req.body.request_date ?? null, req.body.approval_status ?? null, req.body.approved_by ?? null, req.body.approval_date ?? null, req.body.requested_for ?? null);
         return (0, responseFormat_1.successResponse)(http_status_codes_1.default.OK)(res, 'Device request updated successfully')({ result: updateResult });
     }
     catch (error) {

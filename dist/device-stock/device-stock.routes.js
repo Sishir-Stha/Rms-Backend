@@ -33,16 +33,20 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deviceRequestsRouter = void 0;
+exports.deviceStockRouter = void 0;
 const express_1 = require("express");
-const validators = __importStar(require("./device_requests.validator"));
-const controller = __importStar(require("./device_requests.controller"));
-exports.deviceRequestsRouter = (0, express_1.Router)();
-exports.deviceRequestsRouter.post('/', validators.createDeviceRequestValidator, controller.createDeviceRequest);
-exports.deviceRequestsRouter.get('/', validators.filterDeviceRequestsValidator, controller.getDeviceRequests);
-exports.deviceRequestsRouter.get('/:request_id', validators.deviceRequestByIdValidator, controller.getDeviceRequestById);
-exports.deviceRequestsRouter.put('/:request_id', validators.updateDeviceRequestValidator, controller.updateDeviceRequestById);
-exports.deviceRequestsRouter.delete('/:request_id', validators.deviceRequestByIdValidator, controller.deleteDeviceRequest);
-exports.deviceRequestsRouter.patch('/:request_id/move', validators.moveKanbanColumnValidator, controller.moveKanbanColumn);
-exports.deviceRequestsRouter.patch('/:request_id/approve', validators.approveDeviceRequestValidator, controller.approveDeviceRequest);
-//# sourceMappingURL=device_requests.routes.js.map
+const validators = __importStar(require("./device-stock.validator"));
+const controller = __importStar(require("./device-stock.controller"));
+exports.deviceStockRouter = (0, express_1.Router)();
+console.log('DEVICE STOCK ROUTES FILE LOADED');
+exports.deviceStockRouter.get('/ping', (_req, res) => {
+    res.json({ message: 'device stock ping working' });
+});
+exports.deviceStockRouter.post('/', validators.createDeviceStockValidator, controller.createDeviceStock);
+exports.deviceStockRouter.get('/', validators.filterDeviceStocksValidator, controller.getDeviceStocks);
+exports.deviceStockRouter.get('/:stock_id', validators.deviceStockByIdValidator, controller.getDeviceStockById);
+exports.deviceStockRouter.put('/:stock_id', validators.updateDeviceStockValidator, controller.updateDeviceStockById);
+exports.deviceStockRouter.delete('/:stock_id', validators.deleteDeviceStockValidator, controller.deleteDeviceStock);
+exports.deviceStockRouter.patch('/:stock_id/status', validators.updateDeviceStockStatusValidator, controller.updateDeviceStockStatus);
+exports.deviceStockRouter.patch('/:stock_id/transfer', validators.transferDeviceStockValidator, controller.transferDeviceStock);
+//# sourceMappingURL=device-stock.routes.js.map

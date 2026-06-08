@@ -11,6 +11,7 @@ const departments_routes_1 = require("./departments/departments.routes");
 const device_categories_routes_1 = require("./device_categories/device_categories.routes");
 const dashboard_routes_1 = require("./dashboard/dashboard.routes");
 const reports_routes_1 = require("./reports/reports.routes");
+const device_stock_routes_1 = require("./device-stock/device-stock.routes");
 exports.router = (0, express_1.Router)();
 exports.router.use("/auth", auth_routes_1.authrouter);
 exports.router.use("/users", user_routes_1.userRouter);
@@ -21,4 +22,5 @@ exports.router.use('/departments', departments_routes_1.departmentsRouter);
 exports.router.use('/device-categories', device_categories_routes_1.deviceCategoriesRouter);
 exports.router.use('/dashboard', dashboard_routes_1.dashboardRouter);
 exports.router.use('/reports', reports_routes_1.reportsRouter);
+exports.router.use('/device-stock', device_stock_routes_1.deviceStockRouter);
 //# sourceMappingURL=root.routes.js.map

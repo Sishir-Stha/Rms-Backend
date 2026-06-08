@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const pool_1 = require("../src/utills/pool");
+const pool_1 = require("./utills/pool");
 const root_routes_1 = require("./root.routes");
 const cors_1 = __importDefault(require("cors"));
 if (process.env.NODE_ENV !== "production") {

@@ -36,13 +36,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteDeviceRequestValidator = exports.approveDeviceRequestValidator = exports.moveKanbanColumnValidator = exports.updateDeviceRequestValidator = exports.deviceRequestByIdValidator = exports.filterDeviceRequestsValidator = exports.createDeviceRequestValidator = void 0;
 const validators_1 = require("../utills/validators");
 const schemas = __importStar(require("./device_requests.schema"));
-const createDeviceRequestValidator = (req, _res, next) => {
-    // Add this debug line temporarily
-    console.log('Schema keys:', Object.keys(schemas.createDeviceRequestSchema.describe().keys));
-    (0, validators_1.validate)(req.body, schemas.createDeviceRequestSchema)
-        .then(() => next())
-        .catch(next);
-};
+const createDeviceRequestValidator = (req, _res, next) => (0, validators_1.validate)(req.body, schemas.createDeviceRequestSchema)
+    .then(() => next())
+    .catch(next);
 exports.createDeviceRequestValidator = createDeviceRequestValidator;
 const filterDeviceRequestsValidator = (req, _res, next) => {
     const payload = { ...req.query, ...req.body };

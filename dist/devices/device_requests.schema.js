@@ -16,7 +16,7 @@ exports.createDeviceRequestSchema = joi_1.default.object({
     quantity: joi_1.default.number().integer().min(1).default(1),
     priority: joi_1.default.string().valid(...VALID_PRIORITIES).default('Medium'),
     requested_for: joi_1.default.string().allow(null, '').default(''),
-}).options({ stripUnknown: true });
+});
 exports.filterDeviceRequestsSchema = joi_1.default.object({
     approval_status: joi_1.default.string().valid(...VALID_STATUSES).allow(null, '').default(''),
     device_type: joi_1.default.string().allow(null, '').default(''),
@@ -36,6 +36,7 @@ exports.updateDeviceRequestSchema = joi_1.default.object({
     approval_status: joi_1.default.string().valid(...VALID_STATUSES).allow(null, '').default(''),
     approved_by: joi_1.default.number().integer().allow(null).default(null),
     approval_date: joi_1.default.date().allow(null, '').default(null),
+    requested_for: joi_1.default.string().allow(null, '').default(''),
 });
 exports.moveKanbanColumnSchema = joi_1.default.object({
     approval_status: joi_1.default.string().valid(...VALID_STATUSES).required(),
