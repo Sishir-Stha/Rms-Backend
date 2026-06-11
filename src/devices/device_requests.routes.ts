@@ -4,7 +4,7 @@ import * as controller from './device_requests.controller';
 
 export const deviceRequestsRouter = Router();
 
-deviceRequestsRouter.post(   '/',                          validators.createDeviceRequestValidator,  controller.createDeviceRequest);
+deviceRequestsRouter.post(   '/',                          validators.createDeviceRequestValidator,   controller.createDeviceRequest);
 deviceRequestsRouter.get(    '/',                          validators.filterDeviceRequestsValidator,  controller.getDeviceRequests);
 deviceRequestsRouter.get(    '/:request_id',               validators.deviceRequestByIdValidator,     controller.getDeviceRequestById);
 deviceRequestsRouter.put(    '/:request_id',               validators.updateDeviceRequestValidator,   controller.updateDeviceRequestById);

@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   backend:
+    container_name: rms-backend
     build: .
       #This tells Docker:
           #Look for a Dockerfile in current folder
@@ -11,5 +12,4 @@ services:
     env_file:
       - .env
       #This loads environment variables from .env file into container.
-    environment:
-      - DB_HOST=host.docker.internal
+    restart: unless-stopped

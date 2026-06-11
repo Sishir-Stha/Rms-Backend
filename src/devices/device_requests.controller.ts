@@ -5,10 +5,10 @@ import HttpStatus from 'http-status-codes';
 
 export const createDeviceRequest = async (req: Request, res: Response) => {
     try {
-        const { requested_by, department_id, device_type, brand, reason, quantity, priority } = req.body;
+        const { requested_by, department_id, device_type, brand, reason, quantity, priority, requested_for } = req.body;
 
         const request_id = await deviceRequestService.createDeviceRequest(
-            requested_by, department_id, device_type, brand, reason, quantity, priority
+            requested_by, department_id, device_type, brand, reason, quantity, priority, requested_for
         );
 
         if (!request_id) {
@@ -69,6 +69,7 @@ export const updateDeviceRequestById = async (req: Request, res: Response) => {
             req.body.approval_status ?? null,
             req.body.approved_by     ?? null,
             req.body.approval_date   ?? null,
+            req.body.requested_for   ?? null
         );
         return successResponse(HttpStatus.OK)(res, 'Device request updated successfully')({ result: updateResult });
     } catch (error) {
