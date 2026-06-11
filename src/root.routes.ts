@@ -8,7 +8,7 @@ import { departmentsRouter } from './departments/departments.routes';
 import { deviceCategoriesRouter } from './device_categories/device_categories.routes';
 import { dashboardRouter } from './dashboard/dashboard.routes';
 import { reportsRouter } from "./reports/reports.routes";
-
+import { deviceStockRouter } from "./device-stock/device-stock.routes";
 
 export const router = Router();
 
@@ -22,4 +22,4 @@ router.use('/departments', departmentsRouter);
 router.use('/device-categories', deviceCategoriesRouter);
 router.use('/dashboard', dashboardRouter);
 router.use('/reports', reportsRouter);
-
+router.use('/device-stock', deviceStockRouter);

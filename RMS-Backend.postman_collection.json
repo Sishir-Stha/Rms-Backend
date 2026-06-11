@@ -1,0 +1,1196 @@
+{
+  "info": {
+    "name": "RMS Backend API",
+    "description": "Importable Postman collection generated from current mounted Express routes in src/root.routes.ts.\nBase URL is stored as {{baseUrl}} and defaults to http://localhost:4000/api/v1.\nNo bearer token is configured because the current login response returns user details, not a JWT token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{user_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_name\": \"Demo User\",\n  \"email\": \"demo.user@example.com\",\n  \"password\": \"password123\",\n  \"department_id\": 1,\n  \"status\": \"Active\",\n  \"join_date\": \"2026-06-08\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"user_name\": \"Demo User Updated\",\n  \"email\": \"demo.user@example.com\",\n  \"department_id\": 1,\n  \"status\": \"Active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Repairs",
+      "item": [
+        {
+          "name": "Create Repair",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_name\": \"Laptop Dell Latitude\",\n  \"category_id\": 1,\n  \"serial_no\": \"SN-001\",\n  \"department_id\": 1,\n  \"issue\": \"Screen flickering\",\n  \"notes\": \"Occurs after startup\",\n  \"reported_by\": 1,\n  \"vendor_id\": 1,\n  \"priority\": \"Medium\",\n  \"expected_completion\": \"2026-06-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Repairs With Filters",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Open\",\n  \"device_name\": \"Laptop\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs/get",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "get"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Repair By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repairs/{{repair_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "{{repair_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Repair By ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_name\": \"Laptop Dell Latitude\",\n  \"category_id\": 1,\n  \"serial_no\": \"SN-001\",\n  \"department_id\": 1,\n  \"issue\": \"Screen flickering\",\n  \"notes\": \"Replaced display cable\",\n  \"status\": \"InProgress\",\n  \"reported_by\": 1,\n  \"reported_date\": \"2026-06-08\",\n  \"vendor_id\": 1,\n  \"priority\": \"High\",\n  \"expected_completion\": \"2026-06-15\",\n  \"resolved_date\": null,\n  \"cost\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs/{{repair_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "{{repair_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Move Repair Kanban Column",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"InProgress\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/repairs/{{repair_id}}/move",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "{{repair_id}}",
+                "move"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Repair",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/repairs/{{repair_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "repairs",
+                "{{repair_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Device Requests",
+      "item": [
+        {
+          "name": "Create Device Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requested_by\": 1,\n  \"department_id\": 1,\n  \"device_type\": \"Laptop\",\n  \"brand\": \"Dell\",\n  \"reason\": \"New employee onboarding\",\n  \"quantity\": 1,\n  \"priority\": \"Medium\",\n  \"requested_for\": \"Demo Employee\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Device Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests"
+              ],
+              "query": [
+                {
+                  "key": "approval_status",
+                  "value": ""
+                },
+                {
+                  "key": "device_type",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Device Request By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/{{request_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "{{request_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Device Request By ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requested_by\": 1,\n  \"department_id\": 1,\n  \"device_type\": \"Laptop\",\n  \"brand\": \"Dell\",\n  \"reason\": \"Updated business need\",\n  \"quantity\": 1,\n  \"priority\": \"High\",\n  \"request_date\": \"2026-06-08\",\n  \"approval_status\": \"Pending\",\n  \"approved_by\": null,\n  \"approval_date\": null,\n  \"requested_for\": \"Demo Employee\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/{{request_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "{{request_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Move Device Request Kanban Column",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approval_status\": \"Pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/{{request_id}}/move",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "{{request_id}}",
+                "move"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Device Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approval_status\": \"Approved\",\n  \"approved_by\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/{{request_id}}/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "{{request_id}}",
+                "approve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Device Request",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-requests/{{request_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-requests",
+                "{{request_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vendors",
+      "item": [
+        {
+          "name": "Create Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor_name\": \"ABC Repairs Pvt Ltd\",\n  \"contact\": \"Support Team\",\n  \"phone\": \"9800000000\",\n  \"specialization\": \"Laptop Repair\",\n  \"rating\": 4.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/vendors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Vendors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vendors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors"
+              ],
+              "query": [
+                {
+                  "key": "vendor_name",
+                  "value": ""
+                },
+                {
+                  "key": "specialization",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Vendor By ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendor_name\": \"ABC Repairs Pvt Ltd\",\n  \"contact\": \"Support Lead\",\n  \"phone\": \"9800000001\",\n  \"specialization\": \"Laptop Repair\",\n  \"rating\": 4.7\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/vendors/{{vendor_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "{{vendor_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Vendor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/vendors/{{vendor_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vendors",
+                "{{vendor_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Departments",
+      "item": [
+        {
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_name\": \"Information Technology\",\n  \"department_code\": \"IT\",\n  \"head_count\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Departments With Filters",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_name\": \"\",\n  \"department_code\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/get",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "get"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Department By ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_name\": \"Information Technology\",\n  \"department_code\": \"IT\",\n  \"head_count\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{department_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{department_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/departments/{{department_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "departments",
+                "{{department_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Device Categories",
+      "item": [
+        {
+          "name": "Create Device Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"Laptop\",\n  \"description\": \"Portable computers\",\n  \"device_count\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Device Categories With Filters",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-categories/get",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories",
+                "get"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Device Category By ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"Laptop\",\n  \"description\": \"Updated category description\",\n  \"device_count\": 6\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-categories/{{category_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories",
+                "{{category_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Device Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-categories/{{category_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-categories",
+                "{{category_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Device Stock",
+      "item": [
+        {
+          "name": "Device Stock Ping",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-stock/ping",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock",
+                "ping"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Device Stock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_category_id\": 1,\n  \"device_code\": \"LAP-001\",\n  \"issue\": \"Initial stock entry\",\n  \"date\": \"2026-06-08\",\n  \"origin_sector\": \"IT\",\n  \"origin_department\": 1,\n  \"destination_sector\": \"\",\n  \"destination_department\": null,\n  \"device_quantity\": 1,\n  \"status\": \"IN\",\n  \"created_by\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-stock",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Device Stocks With Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-stock",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "device_category_id",
+                  "value": ""
+                },
+                {
+                  "key": "origin_department",
+                  "value": ""
+                },
+                {
+                  "key": "destination_department",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Device Stock By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/device-stock/{{stock_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock",
+                "{{stock_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Device Stock By ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_category_id\": 1,\n  \"device_code\": \"LAP-001\",\n  \"issue\": \"Updated stock notes\",\n  \"date\": \"2026-06-08\",\n  \"origin_sector\": \"IT\",\n  \"origin_department\": 1,\n  \"destination_sector\": \"\",\n  \"destination_department\": null,\n  \"device_quantity\": 2,\n  \"status\": \"IN\",\n  \"updated_by\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-stock/{{stock_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock",
+                "{{stock_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Device Stock Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"OUT\",\n  \"updated_by\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-stock/{{stock_id}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock",
+                "{{stock_id}}",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Transfer Device Stock",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"destination_sector\": \"Operations\",\n  \"destination_department\": 2,\n  \"updated_by\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-stock/{{stock_id}}/transfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock",
+                "{{stock_id}}",
+                "transfer"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Device Stock",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Soft delete. The API requires updated_by in the request body.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"updated_by\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/device-stock/{{stock_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "device-stock",
+                "{{stock_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/metrics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "metrics"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Get Monthly Repair Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/repairs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "repairs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Department Request Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "device"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "repair_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "request_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "vendor_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "department_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "stock_id",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}

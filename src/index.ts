@@ -1,16 +1,18 @@
 import express from "express"
 import dotenv from "dotenv"
-import { pool } from "../src/utills/pool"
+import { pool } from "./utills/pool"
 import { router } from "./root.routes"
 import cors from "cors";
 
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 const app = express();
 
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.CORS_ORIGIN ,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -23,8 +25,8 @@ app.use(express.json());
 
 app.use('/api/v1', router)
 
-const PORT = parseInt(process.env.PORTV || '4000');
-const HOST = process.env.HOST || 'localhost';
+const PORT = parseInt(process.env.PORT || '4000');
+const HOST = process.env.HOST || '0.0.0.0';
 
 const startServer = async () => {
     try {
