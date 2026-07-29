@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
@@ -35,29 +36,55 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+
+          printf '%s\n' "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+
+          chmod 700 ~/.ssh
           chmod 600 ~/.ssh/deploy_key
 
           echo "Testing SSH port reachability..."
-          nc -vz ${{ secrets.SERVER_HOST }} ${{ secrets.SERVER_PORT }}
+
+          nc -vz \
+            "${{ secrets.SERVER_HOST }}" \
+            "${{ secrets.SERVER_PORT }}"
 
           echo "Adding server to known_hosts..."
-          ssh-keyscan -T 30 -p ${{ secrets.SERVER_PORT }} -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+          ssh-keyscan \
+            -T 30 \
+            -p "${{ secrets.SERVER_PORT }}" \
+            -H "${{ secrets.SERVER_HOST }}" \
+            >> ~/.ssh/known_hosts
+
+          chmod 600 ~/.ssh/known_hosts
 
       - name: Pull latest main and restart Docker Compose
         run: |
-          ssh -i ~/.ssh/deploy_key \
-            -p "${{ secrets.SSH_PORT }}" \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
-              set -e
-              
-            cd /home/prod/Rms-Backend
-            git fetch --prune origin \
-                '+refs/heads/main:refs/remotes/origin/main'
-            
-            git reset --hard refs/remotes/origin/main
-            
-            docker compose up -d --build 
-            docker image prune -f 
-            docker compose ps
-          "
+          ssh \
+            -o BatchMode=yes \
+            -i ~/.ssh/deploy_key \
+            -p "${{ secrets.SERVER_PORT }}" \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" << 'REMOTE'
+          set -euo pipefail
+
+          cd /home/prod/Rms-Backend
+
+          echo "Fetching latest main branch..."
+
+          git fetch --prune origin \
+            '+refs/heads/main:refs/remotes/origin/main'
+
+          git reset --hard refs/remotes/origin/main
+
+          echo "Building and restarting backend containers..."
+
+          docker compose up -d --build
+
+          echo "Removing unused Docker images..."
+
+          docker image prune -f
+
+          echo "Current container status:"
+
+          docker compose ps
+          REMOTE
