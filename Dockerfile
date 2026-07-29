@@ -19,12 +19,12 @@ COPY package*.json ./
 ## hence if we copy ocde first and then install dependencies then everytime we change code dependecies will get downloaded
 ## isntead lets install dependecies then copy code so if we change code only code will be re-run not all dependecies
 
-RUN npm install
+RUN npm ci
 
 # now we copy the rest of the code to the container
 COPY . .
 # this command copy every thing but we dont need the node modules so lets make dockerignore 
-
+RUN npm run build
 # this say we gonna need this port to run our application
 EXPOSE 4000
 
