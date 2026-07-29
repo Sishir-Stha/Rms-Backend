@@ -46,11 +46,18 @@ jobs:
 
       - name: Pull latest main and restart Docker Compose
         run: |
-          ssh -i ~/.ssh/deploy_key -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
-            cd ${{ secrets.BACKEND_APP_PATH }} &&
-            git fetch origin main &&
-            git reset --hard origin/main &&
-            docker compose up -d --build &&
-            docker image prune -f &&
+          ssh -i ~/.ssh/deploy_key \
+            -p "${{ secrets.SSH_PORT }}" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
+              set -e
+              
+            cd /home/prod/Rms-Backend
+            git fetch --prune origin \
+                '+refs/heads/main:refs/remotes/origin/main'
+            
+            git reset --hard refs/remotes/origin/main
+            
+            docker compose up -d --build 
+            docker image prune -f 
             docker compose ps
           "
