@@ -1,6 +1,10 @@
-./nodemodules
-./dist
-./build
-
+# Environment files
 .env
-./node_modules
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
