@@ -1,8 +1,7 @@
 import joi from 'joi';
 
 const VALID_PRIORITIES     = ['Low', 'Medium', 'High', 'Critical'] as const;
-const VALID_STATUSES       = ['Requested', 'Pending', 'Approved', 'Rejected'] as const;
-
+const VALID_STATUSES = ['Requested', 'Pending', 'Approved', 'Rejected', 'Fulfilled'] as const;
 
 
 export const createDeviceRequestSchema = joi.object({

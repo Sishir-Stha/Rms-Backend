@@ -10,14 +10,21 @@ if (process.env.NODE_ENV !== "production") {
 
 const app = express();
 
+// 1. Debug the raw environment variable
+console.log("🔍 DEBUG: Raw CORS_ORIGIN from .env =", process.env.CORS_ORIGIN);
 
+// 2. Configure CORS with .split(',') to create an array
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN ,
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'http://localhost:5173',
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
+// 3. Debug the parsed array
+console.log("🔍 DEBUG: Parsed corsOptions.origin =", corsOptions.origin);
+
+// 4. Apply the middleware
 app.use(cors(corsOptions));
 
 
