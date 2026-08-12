@@ -15,7 +15,7 @@ console.log("🔍 DEBUG: Raw CORS_ORIGIN from .env =", process.env.CORS_ORIGIN);
 
 // 2. Configure CORS with .split(',') to create an array
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'http://192.168.5.59:5173',
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
