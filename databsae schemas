@@ -96,7 +96,7 @@ CREATE TABLE public.device_requests (
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
 	CONSTRAINT device_requests_pkey PRIMARY KEY (request_id),
 	CONSTRAINT dr_priority_check CHECK (((priority)::text = ANY (ARRAY[('Low'::character varying)::text, ('Medium'::character varying)::text, ('High'::character varying)::text, ('Critical'::character varying)::text]))),
-	CONSTRAINT dr_status_check CHECK (((approval_status)::text = ANY ((ARRAY['Requested'::character varying, 'Pending'::character varying, 'Approved'::character varying, 'Rejected'::character varying])::text[]))),
+	CONSTRAINT dr_status_check CHECK (((approval_status)::text = ANY ((ARRAY['Requested'::character varying, 'Pending'::character varying, 'Approved'::character varying, 'Rejected'::character varying, 'Fulfilled'::character varying])::text[]))),
 	CONSTRAINT device_requests_approved_by_fkey FOREIGN KEY (approved_by) REFERENCES public.users(user_id),
 	CONSTRAINT device_requests_department_id_fkey FOREIGN KEY (department_id) REFERENCES public.departments(department_id),
 	CONSTRAINT device_requests_requested_by_fkey FOREIGN KEY (requested_by) REFERENCES public.users(user_id)
