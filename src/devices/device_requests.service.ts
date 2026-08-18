@@ -81,6 +81,18 @@ export const getDeviceRequests = async (
                 ELSE NULL
             END AS approval_date,
 
+            CASE
+                WHEN dr.recommended_date IS NOT NULL
+                THEN TO_CHAR(dr.recommended_date, 'YYYY-MM-DD')
+                ELSE NULL
+            END AS recommended_date,
+
+            CASE
+                WHEN dr.fulfilled_date IS NOT NULL
+                THEN TO_CHAR(dr.fulfilled_date, 'YYYY-MM-DD')
+                ELSE NULL
+            END AS fulfilled_date,
+
             TO_CHAR(dr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
             TO_CHAR(dr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
 
@@ -122,8 +134,10 @@ export const getDeviceRequestById = async (
             dr.request_id,
             dr.requested_by,
             u_req.user_name AS requester_name,
+
             dr.department_id,
             d.department_name,
+
             dr.device_type,
             dr.brand,
             dr.reason,
@@ -141,6 +155,18 @@ export const getDeviceRequestById = async (
                 THEN TO_CHAR(dr.approval_date, 'YYYY-MM-DD')
                 ELSE NULL
             END AS approval_date,
+
+            CASE
+                WHEN dr.recommended_date IS NOT NULL
+                THEN TO_CHAR(dr.recommended_date, 'YYYY-MM-DD')
+                ELSE NULL
+            END AS recommended_date,
+
+            CASE
+                WHEN dr.fulfilled_date IS NOT NULL
+                THEN TO_CHAR(dr.fulfilled_date, 'YYYY-MM-DD')
+                ELSE NULL
+            END AS fulfilled_date,
 
             TO_CHAR(dr.created_at, 'YYYY-MM-DD HH24:MI:SS') AS created_at,
             TO_CHAR(dr.updated_at, 'YYYY-MM-DD HH24:MI:SS') AS updated_at,
@@ -165,6 +191,7 @@ export const getDeviceRequestById = async (
     return result.rows[0];
 };
 
+
 /**
  * Update device request
  */
@@ -183,6 +210,7 @@ export const updateDeviceRequestById = async (
     approval_date: Date | null,
     requested_for: string | null
 ): Promise<boolean> => {
+
     const result = await pool.query(
         `SELECT update_device_request(
             $1::int,
@@ -222,20 +250,70 @@ export const updateDeviceRequestById = async (
 
 /**
  * Move request between Kanban columns
+ *
+ * Each Kanban status has its own date field:
+ *
+ * Requested   -> request_date
+ * Recommended -> recommended_date
+ * Approved    -> approval_date
+ * Rejected    -> approval_date
+ * Fulfilled   -> fulfilled_date
+ *
+ * CURRENT_DATE is used so the date is stored according
+ * to the PostgreSQL server's current date and is not
+ * affected by JavaScript timezone conversion.
  */
 export const moveKanbanColumn = async (
     request_id: number,
     status: string
 ): Promise<Record<string, unknown> | undefined> => {
+
+    const normalizedStatus = status.trim().toLowerCase();
+
+    /*
+     * Only allow known status/date-field combinations.
+     * This prevents arbitrary column names from being
+     * inserted into the SQL query.
+     */
+    const dateFieldMap: Record<string, string> = {
+        requested: 'request_date',
+        recommended: 'recommended_date',
+        approved: 'approval_date',
+        rejected: 'approval_date',
+        fulfilled: 'fulfilled_date'
+    };
+
+    const dateField = dateFieldMap[normalizedStatus];
+
+    let query: string;
+
+    if (dateField) {
+        query = `
+            UPDATE public.device_requests
+            SET
+                approval_status = $2,
+                ${dateField} = CURRENT_DATE
+            WHERE request_id = $1
+            RETURNING *;
+        `;
+    } else {
+        /*
+         * Fallback for an unknown status.
+         * Status will still be updated, but no date
+         * field will be modified.
+         */
+        query = `
+            UPDATE public.device_requests
+            SET
+                approval_status = $2
+            WHERE request_id = $1
+            RETURNING *;
+        `;
+    }
+
     const result = await pool.query(
-        `UPDATE public.device_requests
-         SET approval_status = $2
-         WHERE request_id = $1
-         RETURNING *;`,
-        [
-            request_id,
-            status
-        ]
+        query,
+        [request_id, status.trim()]
     );
 
     return result.rows[0];
@@ -244,12 +322,16 @@ export const moveKanbanColumn = async (
 
 /**
  * Approve / Reject device request
+ *
+ * Existing Approved/Rejected behavior is preserved.
+ * approval_date is always updated to today's date.
  */
 export const approveDeviceRequest = async (
     request_id: number,
     approval_status: string,
     approved_by: number
 ): Promise<Record<string, unknown> | undefined> => {
+
     const result = await pool.query(
         `UPDATE public.device_requests
          SET
@@ -275,6 +357,7 @@ export const approveDeviceRequest = async (
 export const deleteDeviceRequest = async (
     request_id: number
 ): Promise<void> => {
+
     await pool.query(
         `DELETE FROM public.device_requests
          WHERE request_id = $1;`,
