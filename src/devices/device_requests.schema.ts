@@ -44,6 +44,6 @@ export const moveKanbanColumnSchema = joi.object({
 });
 
 export const approveDeviceRequestSchema = joi.object({
-    approval_status : joi.string().valid('Approved', 'Rejected').required(),
+    approval_status : joi.string().valid('Approved', 'Rejected', 'Fulfilled', 'Pending').required(),
     approved_by     : joi.number().integer().required(),
 });

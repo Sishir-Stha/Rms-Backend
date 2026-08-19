@@ -11,20 +11,20 @@ export const createRepair = async (
     reported_by        : number,
     vendor_id          : number,
     priority           : string,
-    expected_completion: Date | null
+    reported_date      : string | null // SWAPPED: Now accepts reported_date
 ): Promise<number | undefined> => {
     const query = `
         INSERT INTO public.repairs (
             device_name, category_id, serial_no, department_id,
             issue, notes, reported_by, vendor_id, priority,
-            expected_completion, status,  costs
+            reported_date, status, costs
         )
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'Open',0)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::date, 'Open', 0)
         RETURNING repair_id;
     `;
     const result = await pool.query(query, [
         device_name, category_id, serial_no, department_id,
-        issue, notes, reported_by, vendor_id, priority, expected_completion,
+        issue, notes, reported_by, vendor_id, priority, reported_date,
     ]);
     return result.rows[0]?.repair_id;
 };
@@ -62,18 +62,18 @@ export const updateRepairsById = async (
     issue              : string | null,
     notes              : string | null,
     reported_by        : number | null,
-    reported_date      : Date   | null,
+    reported_date      : string | null,
     vendor_id          : number | null,
     status             : string | null,
     priority           : string | null,
-    expected_completion: Date   | null,
-    resolved_date      : Date   | null,
+    expected_completion: string | null,
+    resolved_date      : string | null,
     cost               : number | null
 ): Promise<boolean> => {
     const result = await pool.query(
         `SELECT update_repair(
-            $1::int, $2::varchar, $3::int,  $4::varchar, $5::int,
-            $6::text, $7::text,  $8::int,  $9::date,   $10::int,
+            $1::int, $2::varchar, $3::int, $4::varchar, $5::int,
+            $6::text, $7::text, $8::int, $9::date, $10::int,
             $11::varchar, $12::varchar, $13::date, $14::date, $15::numeric
         ) AS success;`,
         [
@@ -87,13 +87,16 @@ export const updateRepairsById = async (
 
 // ── MOVE KANBAN COLUMN ────────────────────────────────────────────────────────
 export const updateKanbanColumn = async (
-    repair_id    : number,
-    status: string
+    repair_id: number,
+    status   : string
 ): Promise<Record<string, unknown> | undefined> => {
-    const result = await pool.query(
-        `UPDATE repairs SET status = $2 WHERE repair_id = $1 RETURNING *;`,
-        [repair_id, status]
-    );
+    // AUTO-SET RESOLVED DATE WHEN MOVED TO RESOLVED
+    const isResolved = status === 'Resolved';
+    const query = isResolved
+        ? `UPDATE repairs SET status = $2, resolved_date = CURRENT_DATE WHERE repair_id = $1 RETURNING *;`
+        : `UPDATE repairs SET status = $2 WHERE repair_id = $1 RETURNING *;`;
+        
+    const result = await pool.query(query, [repair_id, status]);
     return result.rows[0];
 };
 

@@ -2,9 +2,7 @@ import joi from 'joi';
 
 const VALID_PRIORITIES  = ['Low', 'Medium', 'High', 'Critical'] as const;
 const VALID_STATUSES    = ['Open', 'InProgress', 'Resolved', 'Closed'] as const;
-
-// Shared options: strip unknown keys and surface all errors at once
-
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 // ── POST /repairs ─────────────────────────────────────────────────────────────
 export const createRepairSchema = joi.object({
@@ -17,7 +15,7 @@ export const createRepairSchema = joi.object({
     reported_by         : joi.number().integer().required(),
     vendor_id           : joi.number().integer().allow(null).default(null),
     priority            : joi.string().valid(...VALID_PRIORITIES).default('Medium'),
-    expected_completion : joi.date().allow(null, '').default(null),
+    reported_date       : joi.string().pattern(DATE_PATTERN).allow(null, '').default(null), // SWAPPED
 });
 
 // ── GET /repairs ──────────────────────────────────────────────────────────────
@@ -41,11 +39,11 @@ export const updateRepairsSchema = joi.object({
     notes               : joi.string().allow(null, '').default(''),
     status              : joi.string().valid(...VALID_STATUSES).allow(null, '').default(''),
     reported_by         : joi.number().integer().allow(null).default(null),
-    reported_date       : joi.date().allow(null, '').default(null),
+    reported_date       : joi.string().pattern(DATE_PATTERN).allow(null, '').default(null),
     vendor_id           : joi.number().integer().allow(null).default(null),
     priority            : joi.string().valid(...VALID_PRIORITIES).allow(null, '').default(''),
-    expected_completion : joi.date().allow(null, '').default(null),
-    resolved_date       : joi.date().allow(null, '').default(null),
+    expected_completion : joi.string().pattern(DATE_PATTERN).allow(null, '').default(null),
+    resolved_date       : joi.string().pattern(DATE_PATTERN).allow(null, '').default(null),
     cost                : joi.number().allow(null).default(null),
 });
 
