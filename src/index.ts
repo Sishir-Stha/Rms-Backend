@@ -10,24 +10,37 @@ if (process.env.NODE_ENV !== "production") {
 
 const app = express();
 
-// 1. Debug the raw environment variable
-console.log("🔍 DEBUG: Raw CORS_ORIGIN from .env =", process.env.CORS_ORIGIN);
-
-// 2. Configure CORS with .split(',') to create an array
+// Dynamically allow localhost AND any local network IP (192.168.x.x, 10.x.x.x, etc.)
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'http://localhost:5173',
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    // 1. Allow requests with no origin (like mobile apps, curl, or Postman)
+    if (!origin) return callback(null, true);
+
+    // 2. Allow localhost
+    const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
+    
+    // 3. Allow any local network IP (192.168.x.x, 10.x.x.x, 172.16.x.x)
+    const isLocalNetwork = /^https?:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(origin);
+    
+    // 4. Also respect the .env file if specific domains are added
+    const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [];
+    const isAllowedEnv = allowedOrigins.includes(origin);
+
+    if (isLocalhost || isLocalNetwork || isAllowedEnv) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️ CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
-// 3. Debug the parsed array
-console.log("🔍 DEBUG: Parsed corsOptions.origin =", corsOptions.origin);
+console.log("✅ CORS configured to allow localhost and local network IPs");
 
-// 4. Apply the middleware
 app.use(cors(corsOptions));
-
-
 app.use(express.json());
 
 app.use('/api/v1', router)
@@ -39,11 +52,12 @@ const startServer = async () => {
     try {
         await pool.connect();
         app.listen(PORT, HOST, () => {
-            console.log(`Server is running on the http://${HOST}:${PORT}`);
+            console.log(`🚀 Server is running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+            console.log(`🌐 Access locally via: http://localhost:${PORT}`);
+            console.log(`🌐 Access via network via: http://<YOUR-LOCAL-IP>:${PORT}`);
         })
-
     } catch (err) {
-        console.error('Failed to connect to the database:', err);
+        console.error('❌ Failed to connect to the database:', err);
         process.exit(1);
     }
 }
