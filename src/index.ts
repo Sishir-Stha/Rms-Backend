@@ -12,27 +12,7 @@ const app = express();
 
 // Dynamically allow localhost AND any local network IP (192.168.x.x, 10.x.x.x, etc.)
 const corsOptions = {
-  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    // 1. Allow requests with no origin (like mobile apps, curl, or Postman)
-    if (!origin) return callback(null, true);
-
-    // 2. Allow localhost
-    const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
-    
-    // 3. Allow any local network IP (192.168.x.x, 10.x.x.x, 172.16.x.x)
-    const isLocalNetwork = /^https?:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(origin);
-    
-    // 4. Also respect the .env file if specific domains are added
-    const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : [];
-    const isAllowedEnv = allowedOrigins.includes(origin);
-
-    if (isLocalhost || isLocalNetwork || isAllowedEnv) {
-      callback(null, true);
-    } else {
-      console.warn(`⚠️ CORS blocked origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : 'http://192.168.5.59:5173',
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
