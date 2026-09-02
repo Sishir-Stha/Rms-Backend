@@ -270,14 +270,9 @@ export const moveKanbanColumn = async (
 
     const normalizedStatus = status.trim().toLowerCase();
 
-    /*
-     * Only allow known status/date-field combinations.
-     * This prevents arbitrary column names from being
-     * inserted into the SQL query.
-     */
-    const dateFieldMap: Record<string, string> = {
-        requested: 'request_date',
+        const dateFieldMap: Record<string, string> = {
         recommended: 'recommended_date',
+        pending: 'recommended_date',
         approved: 'approval_date',
         rejected: 'approval_date',
         fulfilled: 'fulfilled_date'
@@ -363,4 +358,23 @@ export const deleteDeviceRequest = async (
          WHERE request_id = $1;`,
         [request_id]
     );
+};
+
+
+export const updateDeviceRequestExpense = async (
+    request_id: number,
+    expense_without_vat: number,
+    expense_with_vat: number
+): Promise<Record<string, unknown> | undefined> => {
+    const result = await pool.query(
+        `UPDATE public.device_requests
+         SET
+             expense_without_vat = $2,
+             expense_with_vat = $3
+         WHERE request_id = $1
+         RETURNING request_id, expense_without_vat, expense_with_vat;`,
+        [request_id, expense_without_vat, expense_with_vat]
+    );
+
+    return result.rows[0];
 };

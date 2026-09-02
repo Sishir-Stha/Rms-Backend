@@ -11,7 +11,7 @@ export const createRepair = async (
     reported_by        : number,
     vendor_id          : number,
     priority           : string,
-    reported_date      : string | null // SWAPPED: Now accepts reported_date
+    reported_date      : string | null 
 ): Promise<number | undefined> => {
     const query = `
         INSERT INTO public.repairs (
@@ -29,13 +29,36 @@ export const createRepair = async (
     return result.rows[0]?.repair_id;
 };
 
-// ── GET WITH FILTERS (via DB function) ───────────────────────────────────────
 export const getRepairs = async (
     status     : string,
     device_name: string
 ): Promise<Record<string, unknown>[]> => {
     const result = await pool.query(
-        `SELECT * FROM get_repairs($1, $2);`,
+        `SELECT 
+            r.repair_id,
+            r.device_name::TEXT,
+            dc.category_name::TEXT,
+            r.serial_no::TEXT,
+            d.department_name::TEXT,
+            r.issue::TEXT,
+            r.notes::TEXT,
+            u.user_name::TEXT,
+            v.vendor_name::TEXT,
+            r.status::TEXT,
+            r.priority::TEXT,
+            r.expected_completion,
+            r.resolved_date,
+            r.reported_date,
+            r.costs
+        FROM repairs r
+        INNER JOIN device_categories dc ON r.category_id = dc.category_id
+        INNER JOIN vendors v ON r.vendor_id = v.vendor_id
+        INNER JOIN departments d ON r.department_id = d.department_id
+        INNER JOIN users u ON u.user_id = r.reported_by
+        WHERE
+            ($1 = '' OR r.status = $1)
+        AND
+            ($2 = '' OR r.device_name LIKE $2);`,
         [status, device_name]
     );
     return result.rows;
@@ -90,10 +113,11 @@ export const updateKanbanColumn = async (
     repair_id: number,
     status   : string
 ): Promise<Record<string, unknown> | undefined> => {
-    // AUTO-SET RESOLVED DATE WHEN MOVED TO RESOLVED
-    const isResolved = status === 'Resolved';
-    const query = isResolved
-        ? `UPDATE repairs SET status = $2, resolved_date = CURRENT_DATE WHERE repair_id = $1 RETURNING *;`
+    // AUTO-SET RESOLVED DATE WHEN MOVED TO RESOLVED OR CLOSED
+    // COALESCE keeps the original resolved date if it already exists
+    const isDone = status === 'Resolved' || status === 'Closed';
+    const query = isDone
+        ? `UPDATE repairs SET status = $2, resolved_date = COALESCE(resolved_date, CURRENT_DATE) WHERE repair_id = $1 RETURNING *;`
         : `UPDATE repairs SET status = $2 WHERE repair_id = $1 RETURNING *;`;
         
     const result = await pool.query(query, [repair_id, status]);
