@@ -11,3 +11,7 @@ deviceRequestsRouter.put(    '/:request_id',               validators.updateDevi
 deviceRequestsRouter.delete( '/:request_id',               validators.deviceRequestByIdValidator,     controller.deleteDeviceRequest);
 deviceRequestsRouter.patch(  '/:request_id/move',          validators.moveKanbanColumnValidator,      controller.moveKanbanColumn);
 deviceRequestsRouter.patch(  '/:request_id/approve',       validators.approveDeviceRequestValidator,  controller.approveDeviceRequest);
+
+deviceRequestsRouter.put(    '/:request_id/expense',       controller.updateDeviceRequestExpense);
+
+export default deviceRequestsRouter;

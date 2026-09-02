@@ -124,3 +124,28 @@ export const deleteDeviceRequest = async (req: Request, res: Response) => {
         return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res, 'Server Error')({ error });
     }
 };
+
+// --- NEW FUNCTION ADDED HERE ---
+export const updateDeviceRequestExpense = async (req: Request, res: Response) => {
+    try {
+        const request_id = Number(req.params.request_id);
+        const existing = await deviceRequestService.getDeviceRequestById(request_id);
+        
+        if (!existing) {
+            return errorResponse(HttpStatus.NOT_FOUND)(res, 'Device request not found')({});
+        }
+
+        const { expense_without_vat, expense_with_vat } = req.body;
+
+        const result = await deviceRequestService.updateDeviceRequestExpense(
+            request_id,
+            Number(expense_without_vat),
+            Number(expense_with_vat)
+        );
+
+        return successResponse(HttpStatus.OK)(res, 'Device request expense updated successfully')({ result });
+    } catch (error) {
+        console.error(error);
+        return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR)(res, 'Server Error')({ error });
+    }
+};
