@@ -12,7 +12,6 @@ import { deviceStockRouter } from "./device-stock/device-stock.routes";
 
 export const router = Router();
 
-
 router.use("/auth", authrouter);
 router.use("/users", userRouter);
 router.use('/repairs', repairsRouter);
