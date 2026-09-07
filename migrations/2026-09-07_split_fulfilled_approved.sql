@@ -1,7 +1,5 @@
 -- =====================================================================
 -- RMS Device Request: Soft Delete, Partial Fulfillment Split, Audit Log
--- Run this file once to add all required columns and tables
--- Safe to re-run (all statements use IF NOT EXISTS / IF EXISTS)
 -- =====================================================================
 
 -- PREREQUISITE COLUMNS (safe no-ops if already present)
