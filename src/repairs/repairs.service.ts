@@ -109,18 +109,31 @@ export const updateRepairsById = async (
 };
 
 // ── MOVE KANBAN COLUMN ────────────────────────────────────────────────────────
+// FIXED: resolved_date always updates to today when moving to Resolved/Closed,
+//        and is cleared when moved back to Open/InProgress.
+//        Frontend then picks the right date per column:
+//          Open        -> reported_date
+//          InProgress  -> expected_completion
+//          Resolved    -> resolved_date (today)
+//          Closed      -> resolved_date (today)
 export const updateKanbanColumn = async (
     repair_id: number,
     status   : string
 ): Promise<Record<string, unknown> | undefined> => {
-    // AUTO-SET RESOLVED DATE WHEN MOVED TO RESOLVED OR CLOSED
-    // COALESCE keeps the original resolved date if it already exists
-    const isDone = status === 'Resolved' || status === 'Closed';
+    const normalizedStatus = status.trim();
+    const isDone = normalizedStatus === 'Resolved' || normalizedStatus === 'Closed';
+
     const query = isDone
-        ? `UPDATE repairs SET status = $2, resolved_date = COALESCE(resolved_date, CURRENT_DATE) WHERE repair_id = $1 RETURNING *;`
-        : `UPDATE repairs SET status = $2 WHERE repair_id = $1 RETURNING *;`;
-        
-    const result = await pool.query(query, [repair_id, status]);
+        ? `UPDATE repairs
+           SET status = $2, resolved_date = CURRENT_DATE
+           WHERE repair_id = $1
+           RETURNING *;`
+        : `UPDATE repairs
+           SET status = $2, resolved_date = NULL
+           WHERE repair_id = $1
+           RETURNING *;`;
+
+    const result = await pool.query(query, [repair_id, normalizedStatus]);
     return result.rows[0];
 };
 
