@@ -45,12 +45,8 @@ CREATE TABLE IF NOT EXISTS public.device_request_audit_log (
 CREATE INDEX IF NOT EXISTS idx_audit_log_request_id
   ON public.device_request_audit_log(request_id);
 
--- OPTIONAL CLEANUP (uncomment if you want to remove unused experimental tables)
--- DROP TABLE IF EXISTS public.device_request_history;
--- DROP TABLE IF EXISTS public.device_request_fulfillments;
-
 -- =====================================================================
--- VERIFICATION QUERIES (run after migration to confirm)
+-- VERIFICATION QUERIES 
 -- =====================================================================
 -- SELECT column_name FROM information_schema.columns
 -- WHERE table_schema='public' AND table_name='device_requests'
