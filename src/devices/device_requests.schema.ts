@@ -38,6 +38,8 @@ export const updateDeviceRequestSchema = joi.object({
   requested_for: joi.string().allow(null, '').default(''),
   planned_fulfilled_qty: joi.number().integer().min(0).allow(null).default(null),
   updated_by: joi.number().integer().allow(null).default(null),
+  expense_without_vat: joi.number().min(0).allow(null).default(null),
+  expense_with_vat: joi.number().min(0).allow(null).default(null),
 });
 
 export const moveKanbanColumnSchema = joi.object({

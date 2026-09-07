@@ -74,13 +74,14 @@ export const updateDeviceRequestById = async (
   brand: string | null, reason: string | null, quantity: number | null, priority: string | null,
   request_date: Date | null, approval_status: string | null, approved_by: number | null,
   approval_date: Date | null, requested_for: string | null, planned_fulfilled_qty: number | null,
-  updated_by: number | null
+  updated_by: number | null, expense_without_vat: number | null, expense_with_vat: number | null
 ): Promise<boolean> => {
   const oldRes = await pool.query(`SELECT * FROM public.device_requests WHERE request_id = $1 AND is_deleted = FALSE`, [request_id]);
   const old = oldRes.rows[0];
   if (!old) return false;
 
   const editor = updated_by ?? approved_by;
+
   const result = await pool.query(
     `UPDATE public.device_requests SET
       requested_by = COALESCE($2, requested_by),
@@ -96,9 +97,11 @@ export const updateDeviceRequestById = async (
       approval_date = COALESCE($12, approval_date),
       requested_for = COALESCE($13, requested_for),
       planned_fulfilled_qty = COALESCE($14, planned_fulfilled_qty),
+      expense_without_vat = COALESCE($15::numeric, expense_without_vat),
+      expense_with_vat = COALESCE($16::numeric, expense_with_vat),
       updated_at = CURRENT_TIMESTAMP
      WHERE request_id = $1 AND is_deleted = FALSE`,
-    [request_id, requested_by, department_id, device_type, brand, reason, quantity, priority, request_date, approval_status, approved_by, approval_date, requested_for, planned_fulfilled_qty]
+    [request_id, requested_by, department_id, device_type, brand, reason, quantity, priority, request_date, approval_status, approved_by, approval_date, requested_for, planned_fulfilled_qty, expense_without_vat, expense_with_vat]
   );
   const changed = (result.rowCount ?? 0) > 0;
 
@@ -111,6 +114,9 @@ export const updateDeviceRequestById = async (
     }
     if (planned_fulfilled_qty != null && Number(planned_fulfilled_qty) !== Number(old.planned_fulfilled_qty ?? 0)) {
       logs.push({ action: 'PARTIAL_FULFILLED_UPDATE', notes: `${name} updated partial quantity from ${old.planned_fulfilled_qty ?? 0} units to ${planned_fulfilled_qty} units` });
+    }
+    if (expense_without_vat != null && Number(expense_without_vat) !== Number(old.expense_without_vat ?? 0)) {
+      logs.push({ action: 'EXPENSE_UPDATE', notes: `${name} updated expense without VAT from Rs. ${old.expense_without_vat || 0} to Rs. ${expense_without_vat}` });
     }
     if (device_type != null && device_type !== old.device_type) logs.push({ action: 'FIELD_UPDATE', notes: `${name} updated device type from "${old.device_type}" to "${device_type}"` });
     if (brand != null && brand !== old.brand) logs.push({ action: 'FIELD_UPDATE', notes: `${name} updated brand from "${old.brand}" to "${brand}"` });
@@ -193,6 +199,7 @@ export const processSplitFulfillment = async (request_id: number, fulfilled_qty:
 
     await pool.query(`UPDATE public.device_requests SET is_deleted = TRUE, deleted_at = CURRENT_TIMESTAMP WHERE request_id = $1`, [request_id]);
 
+    // FULFILLED child -> keeps the original expense amounts
     const fulfilledRes = await pool.query(
       `INSERT INTO public.device_requests (
         requested_by, department_id, device_type, brand, reason, quantity, priority, request_date,
@@ -210,19 +217,19 @@ export const processSplitFulfillment = async (request_id: number, fulfilled_qty:
     );
     const fulfilled_request_id = fulfilledRes.rows[0].request_id;
 
+    // REMAINING APPROVED child -> expenses RESET to 0 (new entry)
     const remainingRes = await pool.query(
       `INSERT INTO public.device_requests (
         requested_by, department_id, device_type, brand, reason, quantity, priority, request_date,
         approval_status, requested_for, approved_by, approval_date, original_request_id, split_info, is_deleted,
         expense_without_vat, expense_with_vat, planned_fulfilled_qty
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Approved', $9, $10, $11, $12, $13, FALSE, $14, $15, NULL)
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Approved', $9, $10, $11, $12, $13, FALSE, 0, 0, NULL)
       RETURNING request_id`,
       [
         original.requested_by, original.department_id, original.device_type, original.brand,
         original.reason, remaining_qty, original.priority, original.request_date, original.requested_for,
         performed_by || original.approved_by, today,
-        request_id, `${remaining_qty}/${total_qty}`,
-        original.expense_without_vat || 0, original.expense_with_vat || 0
+        request_id, `${remaining_qty}/${total_qty}`
       ]
     );
     const remaining_request_id = remainingRes.rows[0].request_id;
