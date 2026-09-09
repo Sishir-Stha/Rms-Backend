@@ -112,8 +112,18 @@ export const updateDeviceRequestById = async (
     if (quantity != null && Number(quantity) !== Number(old.quantity)) {
       logs.push({ action: 'QUANTITY_UPDATE', notes: `${name} updated quantity from ${old.quantity} units to ${quantity} units` });
     }
-    if (planned_fulfilled_qty != null && Number(planned_fulfilled_qty) !== Number(old.planned_fulfilled_qty ?? 0)) {
-      logs.push({ action: 'PARTIAL_FULFILLED_UPDATE', notes: `${name} updated partial quantity from ${old.planned_fulfilled_qty ?? 0} units to ${planned_fulfilled_qty} units` });
+      if (planned_fulfilled_qty != null) {
+      const oldPartialQty = (old.approval_status === 'Approved' && (!old.planned_fulfilled_qty || old.planned_fulfilled_qty === 0))
+        ? Number(old.quantity)
+        : Number(old.planned_fulfilled_qty) || 0;
+      const newPartialQty = Number(planned_fulfilled_qty);
+      
+      if (newPartialQty !== oldPartialQty) {
+        logs.push({ 
+          action: 'PARTIAL_FULFILLED_UPDATE', 
+          notes: `${name} updated partial quantity from ${oldPartialQty} units to ${newPartialQty} units` 
+        });
+      }
     }
     if (expense_without_vat != null && Number(expense_without_vat) !== Number(old.expense_without_vat ?? 0)) {
       logs.push({ action: 'EXPENSE_UPDATE', notes: `${name} updated expense without VAT from Rs. ${old.expense_without_vat || 0} to Rs. ${expense_without_vat}` });
